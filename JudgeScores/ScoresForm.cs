@@ -15,6 +15,8 @@ namespace JudgeScores
 			StartTimer = 1,
 			StopTimer = 2,
 			ResetTimer = 3,
+			RoundRemain10Seconds = 4,
+			RoundComplete = 5,
 		}
 
 		private Timer _firstTimer = new Timer();
@@ -96,6 +98,8 @@ namespace JudgeScores
 			{
 				PlaySound(file);
 			});
+
+			ResizeLabels();
 		}
 
 		private void PlaySound(string fileName)
@@ -111,9 +115,15 @@ namespace JudgeScores
 
 			countdownTimer.Text = _countdownTime.ToString(@"mm\:ss");
 
-			if(_countdownTime.TotalSeconds <= 0)
+			if (_countdownTime.TotalSeconds == 10)
+			{
+				PlaySoundForAction(MainActionsType.RoundRemain10Seconds);
+			}
+
+			if (_countdownTime.TotalSeconds <= 0)
 			{
 				_countdownTimer.Stop();
+				PlaySoundForAction(MainActionsType.RoundComplete);
 			}
 		}
 
@@ -135,6 +145,7 @@ namespace JudgeScores
 				{
 					Log($"1ый геймпад кнопка <{GetButtonName(clickedButton.Value)}> нажата");
 					ProcessButton(clickedButton.Value, _firstPlayer);
+					ProcessButton(clickedButton.Value, _secondPlayer);
 				}
 			}
 		}
@@ -186,11 +197,13 @@ namespace JudgeScores
 			if (Gamepad.Gamepads.Count > 0)
 			{
 				_firstGamepad = new GamepadWatcher(Gamepad.Gamepads[0]);
+				Log("1ый геймпад добавлен");
 			}
 
 			if (Gamepad.Gamepads.Count > 1)
 			{
 				_secondGamepad = new GamepadWatcher(Gamepad.Gamepads[1]);
+				Log("2ой геймпад добавлен");
 			}
 		}
 
@@ -381,17 +394,17 @@ namespace JudgeScores
 
 		private void secondPlayerOneValue_Click(object sender, EventArgs e)
 		{
-			AddButtonAssignmentPlayer(GamepadSource.Second, _secondPlayer, ScoresRange.One, button1Name2nd, (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +1 балл для второго участника");
+			AddButtonAssignmentPlayer(GamepadSource.First, _secondPlayer, ScoresRange.One, button1Name2nd, (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +1 балл для второго участника");
 		}
 
 		private void secondPlayerTwoValue_Click(object sender, EventArgs e)
 		{
-			AddButtonAssignmentPlayer(GamepadSource.Second, _secondPlayer, ScoresRange.Two, button2Name2nd, (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +2 балла для второго участника");
+			AddButtonAssignmentPlayer(GamepadSource.First, _secondPlayer, ScoresRange.Two, button2Name2nd, (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +2 балла для второго участника");
 		}
 
 		private void secondPlayerThreeValue_Click(object sender, EventArgs e)
 		{
-			AddButtonAssignmentPlayer(GamepadSource.Second, _secondPlayer, ScoresRange.Three, button3Name2nd, (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +3 балла для второго участника");
+			AddButtonAssignmentPlayer(GamepadSource.First, _secondPlayer, ScoresRange.Three, button3Name2nd, (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +3 балла для второго участника");
 		}
 
 		private void AddSoundForPlayer(Player player, ScoresRange scoresRange)
@@ -492,13 +505,23 @@ namespace JudgeScores
 
 			secondPlayerScores.Location = new System.Drawing.Point(firstPlayerScores.Width + firstPlayerScores.Location.X, secondPlayerScores.Location.Y);
 
-			float fontSize = Math.Max(firstPlayerScores.Width * firstPlayerScores.Height / ((514 * 362) / 240F)*fontScale, 14F);
+			float fontSize = Math.Max(firstPlayerScores.Width * firstPlayerScores.Height / ((514 * 362) / 150F)*fontScale, 14F);
 
 			firstPlayerScores.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			secondPlayerScores.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			countdownTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize * 0.15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 
 			countdownTimer.Location = new System.Drawing.Point(firstPlayerScores.Width + firstPlayerScores.Location.X - countdownTimer.Width / 2, countdownTimer.Location.Y);
+		}
+
+		private void setRoundRemainSound_Click(object sender, EventArgs e)
+		{
+			AddMainSound(MainActionsType.RoundRemain10Seconds);
+		}
+
+		private void setRoundEndSound_Click(object sender, EventArgs e)
+		{
+			AddMainSound(MainActionsType.RoundComplete);
 		}
 	}
 }

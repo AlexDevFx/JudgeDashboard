@@ -71,6 +71,8 @@
 			this.loggerPage = new System.Windows.Forms.TabPage();
 			this.loggerTextbox = new System.Windows.Forms.TextBox();
 			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+			this.setRoundRemainSound = new System.Windows.Forms.Button();
+			this.setRoundEndSound = new System.Windows.Forms.Button();
 			this.JudgesDashboard.SuspendLayout();
 			this.ScoresPage.SuspendLayout();
 			this.SettingsPage.SuspendLayout();
@@ -101,7 +103,7 @@
 			this.JudgesDashboard.Location = new System.Drawing.Point(-1, 0);
 			this.JudgesDashboard.Name = "JudgesDashboard";
 			this.JudgesDashboard.SelectedIndex = 0;
-			this.JudgesDashboard.Size = new System.Drawing.Size(1031, 394);
+			this.JudgesDashboard.Size = new System.Drawing.Size(1031, 499);
 			this.JudgesDashboard.TabIndex = 1;
 			// 
 			// ScoresPage
@@ -112,7 +114,7 @@
 			this.ScoresPage.Location = new System.Drawing.Point(4, 22);
 			this.ScoresPage.Name = "ScoresPage";
 			this.ScoresPage.Padding = new System.Windows.Forms.Padding(3);
-			this.ScoresPage.Size = new System.Drawing.Size(1023, 368);
+			this.ScoresPage.Size = new System.Drawing.Size(1023, 473);
 			this.ScoresPage.TabIndex = 0;
 			this.ScoresPage.Text = "Раунд";
 			this.ScoresPage.UseVisualStyleBackColor = true;
@@ -122,9 +124,9 @@
 			this.secondPlayerScores.BackColor = System.Drawing.Color.Blue;
 			this.secondPlayerScores.Font = new System.Drawing.Font("Microsoft Sans Serif", 240F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.secondPlayerScores.ForeColor = System.Drawing.SystemColors.Window;
-			this.secondPlayerScores.Location = new System.Drawing.Point(510, 3);
+			this.secondPlayerScores.Location = new System.Drawing.Point(514, 3);
 			this.secondPlayerScores.Name = "secondPlayerScores";
-			this.secondPlayerScores.Size = new System.Drawing.Size(514, 362);
+			this.secondPlayerScores.Size = new System.Drawing.Size(510, 470);
 			this.secondPlayerScores.TabIndex = 2;
 			this.secondPlayerScores.Text = "99";
 			this.secondPlayerScores.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -136,13 +138,15 @@
 			this.firstPlayerScores.ForeColor = System.Drawing.SystemColors.Window;
 			this.firstPlayerScores.Location = new System.Drawing.Point(3, 3);
 			this.firstPlayerScores.Name = "firstPlayerScores";
-			this.firstPlayerScores.Size = new System.Drawing.Size(514, 362);
+			this.firstPlayerScores.Size = new System.Drawing.Size(514, 470);
 			this.firstPlayerScores.TabIndex = 1;
 			this.firstPlayerScores.Text = "99";
 			this.firstPlayerScores.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// SettingsPage
 			// 
+			this.SettingsPage.Controls.Add(this.setRoundEndSound);
+			this.SettingsPage.Controls.Add(this.setRoundRemainSound);
 			this.SettingsPage.Controls.Add(this.groupBox2);
 			this.SettingsPage.Controls.Add(this.groupBox1);
 			this.SettingsPage.Controls.Add(this.label1);
@@ -162,7 +166,7 @@
 			this.SettingsPage.Location = new System.Drawing.Point(4, 22);
 			this.SettingsPage.Name = "SettingsPage";
 			this.SettingsPage.Padding = new System.Windows.Forms.Padding(3);
-			this.SettingsPage.Size = new System.Drawing.Size(1023, 368);
+			this.SettingsPage.Size = new System.Drawing.Size(1023, 473);
 			this.SettingsPage.TabIndex = 1;
 			this.SettingsPage.Text = "Настройки";
 			this.SettingsPage.UseVisualStyleBackColor = true;
@@ -475,9 +479,9 @@
 			// notifyText
 			// 
 			this.notifyText.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.notifyText.Location = new System.Drawing.Point(3, 340);
+			this.notifyText.Location = new System.Drawing.Point(0, 446);
 			this.notifyText.Name = "notifyText";
-			this.notifyText.Size = new System.Drawing.Size(1020, 25);
+			this.notifyText.Size = new System.Drawing.Size(1020, 24);
 			this.notifyText.TabIndex = 10;
 			this.notifyText.Text = "Уведомление";
 			// 
@@ -557,7 +561,7 @@
 			this.loggerPage.Location = new System.Drawing.Point(4, 22);
 			this.loggerPage.Name = "loggerPage";
 			this.loggerPage.Padding = new System.Windows.Forms.Padding(3);
-			this.loggerPage.Size = new System.Drawing.Size(1023, 368);
+			this.loggerPage.Size = new System.Drawing.Size(1023, 407);
 			this.loggerPage.TabIndex = 2;
 			this.loggerPage.Text = "Лог";
 			this.loggerPage.UseVisualStyleBackColor = true;
@@ -577,11 +581,33 @@
 			this.openFileDialog.FileName = "openFileDialog";
 			this.openFileDialog.Filter = "Mp3|*.mp3|Wav|*.wav";
 			// 
+			// setRoundRemainSound
+			// 
+			this.setRoundRemainSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.setRoundRemainSound.Location = new System.Drawing.Point(623, 320);
+			this.setRoundRemainSound.Name = "setRoundRemainSound";
+			this.setRoundRemainSound.Size = new System.Drawing.Size(164, 40);
+			this.setRoundRemainSound.TabIndex = 36;
+			this.setRoundRemainSound.Text = "Звук <10 секунд до конца раунда>";
+			this.setRoundRemainSound.UseVisualStyleBackColor = true;
+			this.setRoundRemainSound.Click += new System.EventHandler(this.setRoundRemainSound_Click);
+			// 
+			// setRoundEndSound
+			// 
+			this.setRoundEndSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.setRoundEndSound.Location = new System.Drawing.Point(623, 366);
+			this.setRoundEndSound.Name = "setRoundEndSound";
+			this.setRoundEndSound.Size = new System.Drawing.Size(164, 41);
+			this.setRoundEndSound.TabIndex = 37;
+			this.setRoundEndSound.Text = "Звук <Конец раунда>";
+			this.setRoundEndSound.UseVisualStyleBackColor = true;
+			this.setRoundEndSound.Click += new System.EventHandler(this.setRoundEndSound_Click);
+			// 
 			// ScoresForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1028, 391);
+			this.ClientSize = new System.Drawing.Size(1028, 497);
 			this.Controls.Add(this.JudgesDashboard);
 			this.Name = "ScoresForm";
 			this.Text = "Судейская доска";
@@ -645,6 +671,8 @@
 		private System.Windows.Forms.OpenFileDialog openFileDialog;
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.Button setRoundEndSound;
+		private System.Windows.Forms.Button setRoundRemainSound;
 	}
 }
 
