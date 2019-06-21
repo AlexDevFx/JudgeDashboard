@@ -583,10 +583,9 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1028, 391);
 			this.Controls.Add(this.JudgesDashboard);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-			this.MaximizeBox = false;
 			this.Name = "ScoresForm";
 			this.Text = "Судейская доска";
+			this.SizeChanged += new System.EventHandler(this.ScoresForm_SizeChanged);
 			this.JudgesDashboard.ResumeLayout(false);
 			this.ScoresPage.ResumeLayout(false);
 			this.ScoresPage.PerformLayout();

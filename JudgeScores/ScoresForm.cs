@@ -464,5 +464,41 @@ namespace JudgeScores
 		{
 			AddMainSound(MainActionsType.ResetTimer);
 		}
+
+		private void ScoresForm_SizeChanged(object sender, EventArgs e)
+		{
+			ResizeLabels();
+		}
+
+		private void ResizeLabels()
+		{
+			float fontScale = 1.0f;
+
+			if (WindowState == FormWindowState.Maximized)
+			{
+				fontScale = 0.8f;
+			}
+
+			JudgesDashboard.Height = Height - 38;
+			JudgesDashboard.Width = Width;
+
+			firstPlayerScores.Width = (JudgesDashboard.Width - 3) / 2;
+			secondPlayerScores.Width = (JudgesDashboard.Width - 3) / 2;
+			countdownTimer.Width = (int)(firstPlayerScores.Width / 3.4);
+
+			firstPlayerScores.Height = JudgesDashboard.Height - 32;
+			secondPlayerScores.Height = JudgesDashboard.Height - 32;
+			countdownTimer.Height = (int)(firstPlayerScores.Height / 6.5);
+
+			secondPlayerScores.Location = new System.Drawing.Point(firstPlayerScores.Width + firstPlayerScores.Location.X, secondPlayerScores.Location.Y);
+
+			float fontSize = Math.Max(firstPlayerScores.Width * firstPlayerScores.Height / ((514 * 362) / 240F)*fontScale, 14F);
+
+			firstPlayerScores.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			secondPlayerScores.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			countdownTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize * 0.15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+
+			countdownTimer.Location = new System.Drawing.Point(firstPlayerScores.Width + firstPlayerScores.Location.X - countdownTimer.Width / 2, countdownTimer.Location.Y);
+		}
 	}
 }
