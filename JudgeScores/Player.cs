@@ -14,8 +14,8 @@ namespace JudgeScores
 	public class Player
 	{
 		public ushort Scores { get; private set; }
-		public Dictionary<GamepadButtons, ScoresRange> _keyBindings = new Dictionary<GamepadButtons, ScoresRange>();
-		public Dictionary<ScoresRange, string> _soundBindings = new Dictionary<ScoresRange, string>();
+		public Dictionary<GamepadButtons, ScoresRange> KeyBindings { get; private set; } = new Dictionary<GamepadButtons, ScoresRange>();
+		public Dictionary<ScoresRange, string> SoundBindings { get; private set; } = new Dictionary<ScoresRange, string>();
 		private Action _setHitAction;
 		private Action<string> _soundAction;
 
@@ -27,18 +27,18 @@ namespace JudgeScores
 
 		public void SetHit(GamepadButtons button)
 		{
-			if (!_keyBindings.ContainsKey(button))
+			if (!KeyBindings.ContainsKey(button))
 				return;
 
-			ushort scores = (ushort)_keyBindings[button];
+			ushort scores = (ushort)KeyBindings[button];
 			if (Scores + scores < short.MaxValue)
 				Scores += scores;
 
 			_setHitAction?.Invoke();
 
-			if(_soundBindings.ContainsKey(_keyBindings[button]))
+			if(SoundBindings.ContainsKey(KeyBindings[button]))
 			{
-				string soundFile = _soundBindings[_keyBindings[button]];
+				string soundFile = SoundBindings[KeyBindings[button]];
 
 				if(!string.IsNullOrEmpty(soundFile) && !string.IsNullOrWhiteSpace(soundFile))
 				{
@@ -49,13 +49,13 @@ namespace JudgeScores
 
 		public void AddScoresKeyBinding(ScoresRange scoresRange, GamepadButtons button)
 		{
-			if(_keyBindings.ContainsKey(button))
+			if(KeyBindings.ContainsKey(button))
 			{
-				_keyBindings[button] = scoresRange;
+				KeyBindings[button] = scoresRange;
 			}
 			else
 			{
-				_keyBindings.Add(button, scoresRange);
+				KeyBindings.Add(button, scoresRange);
 			}
 		}
 
@@ -67,13 +67,13 @@ namespace JudgeScores
 
 		public void AddSoundBinding(ScoresRange scoresRange, string fileName)
 		{
-			if (_soundBindings.ContainsKey(scoresRange))
+			if (SoundBindings.ContainsKey(scoresRange))
 			{
-				_soundBindings[scoresRange] = fileName;
+				SoundBindings[scoresRange] = fileName;
 			}
 			else
 			{
-				_soundBindings.Add(scoresRange, fileName);
+				SoundBindings.Add(scoresRange, fileName);
 			}
 		}
 	}

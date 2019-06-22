@@ -34,6 +34,8 @@
 			this.secondPlayerScores = new System.Windows.Forms.Label();
 			this.firstPlayerScores = new System.Windows.Forms.Label();
 			this.SettingsPage = new System.Windows.Forms.TabPage();
+			this.setRoundEndSound = new System.Windows.Forms.Button();
+			this.setRoundRemainSound = new System.Windows.Forms.Button();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.set3Sound2nd = new System.Windows.Forms.Button();
 			this.set2Sound2nd = new System.Windows.Forms.Button();
@@ -71,8 +73,6 @@
 			this.loggerPage = new System.Windows.Forms.TabPage();
 			this.loggerTextbox = new System.Windows.Forms.TextBox();
 			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-			this.setRoundRemainSound = new System.Windows.Forms.Button();
-			this.setRoundEndSound = new System.Windows.Forms.Button();
 			this.JudgesDashboard.SuspendLayout();
 			this.ScoresPage.SuspendLayout();
 			this.SettingsPage.SuspendLayout();
@@ -170,6 +170,28 @@
 			this.SettingsPage.TabIndex = 1;
 			this.SettingsPage.Text = "Настройки";
 			this.SettingsPage.UseVisualStyleBackColor = true;
+			// 
+			// setRoundEndSound
+			// 
+			this.setRoundEndSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.setRoundEndSound.Location = new System.Drawing.Point(623, 366);
+			this.setRoundEndSound.Name = "setRoundEndSound";
+			this.setRoundEndSound.Size = new System.Drawing.Size(164, 41);
+			this.setRoundEndSound.TabIndex = 37;
+			this.setRoundEndSound.Text = "Звук <Конец раунда>";
+			this.setRoundEndSound.UseVisualStyleBackColor = true;
+			this.setRoundEndSound.Click += new System.EventHandler(this.setRoundEndSound_Click);
+			// 
+			// setRoundRemainSound
+			// 
+			this.setRoundRemainSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.setRoundRemainSound.Location = new System.Drawing.Point(623, 320);
+			this.setRoundRemainSound.Name = "setRoundRemainSound";
+			this.setRoundRemainSound.Size = new System.Drawing.Size(164, 40);
+			this.setRoundRemainSound.TabIndex = 36;
+			this.setRoundRemainSound.Text = "Звук <10 секунд до конца раунда>";
+			this.setRoundRemainSound.UseVisualStyleBackColor = true;
+			this.setRoundRemainSound.Click += new System.EventHandler(this.setRoundRemainSound_Click);
 			// 
 			// groupBox2
 			// 
@@ -561,7 +583,7 @@
 			this.loggerPage.Location = new System.Drawing.Point(4, 22);
 			this.loggerPage.Name = "loggerPage";
 			this.loggerPage.Padding = new System.Windows.Forms.Padding(3);
-			this.loggerPage.Size = new System.Drawing.Size(1023, 407);
+			this.loggerPage.Size = new System.Drawing.Size(1023, 473);
 			this.loggerPage.TabIndex = 2;
 			this.loggerPage.Text = "Лог";
 			this.loggerPage.UseVisualStyleBackColor = true;
@@ -581,28 +603,6 @@
 			this.openFileDialog.FileName = "openFileDialog";
 			this.openFileDialog.Filter = "Mp3|*.mp3|Wav|*.wav";
 			// 
-			// setRoundRemainSound
-			// 
-			this.setRoundRemainSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.setRoundRemainSound.Location = new System.Drawing.Point(623, 320);
-			this.setRoundRemainSound.Name = "setRoundRemainSound";
-			this.setRoundRemainSound.Size = new System.Drawing.Size(164, 40);
-			this.setRoundRemainSound.TabIndex = 36;
-			this.setRoundRemainSound.Text = "Звук <10 секунд до конца раунда>";
-			this.setRoundRemainSound.UseVisualStyleBackColor = true;
-			this.setRoundRemainSound.Click += new System.EventHandler(this.setRoundRemainSound_Click);
-			// 
-			// setRoundEndSound
-			// 
-			this.setRoundEndSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.setRoundEndSound.Location = new System.Drawing.Point(623, 366);
-			this.setRoundEndSound.Name = "setRoundEndSound";
-			this.setRoundEndSound.Size = new System.Drawing.Size(164, 41);
-			this.setRoundEndSound.TabIndex = 37;
-			this.setRoundEndSound.Text = "Звук <Конец раунда>";
-			this.setRoundEndSound.UseVisualStyleBackColor = true;
-			this.setRoundEndSound.Click += new System.EventHandler(this.setRoundEndSound_Click);
-			// 
 			// ScoresForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -611,6 +611,7 @@
 			this.Controls.Add(this.JudgesDashboard);
 			this.Name = "ScoresForm";
 			this.Text = "Судейская доска";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ScoresForm_FormClosing);
 			this.SizeChanged += new System.EventHandler(this.ScoresForm_SizeChanged);
 			this.JudgesDashboard.ResumeLayout(false);
 			this.ScoresPage.ResumeLayout(false);

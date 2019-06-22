@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Windows.Gaming.Input;
@@ -19,6 +21,24 @@ namespace JudgeScores
 			RoundComplete = 5,
 		}
 
+		private class JsonSettings
+		{
+			public Dictionary<MainActionsType, string> MainFunctionSounds { get; set; }
+			public Dictionary<GamepadButtons, MainActionsType> MainFunctionBinds { get; set; }
+			public Dictionary<GamepadButtons, ScoresRange> FirstPlayerBinds { get; set; }
+			public Dictionary<GamepadButtons, ScoresRange> SecondPlayerBinds { get; set; }
+			public Dictionary<ScoresRange, string> FirstPlayerSounds { get; set; }
+			public Dictionary<ScoresRange, string> SecondPlayerSounds { get; set; }
+			public double? CountdownSeconds { get; set; }
+		}
+
+		private class ScoresBinds
+		{
+			public Label Label { get; set; }
+			public Func<GamepadButtons, string> MessageFunc { get; set; }
+		}
+
+		private const string BindingsFilePath = "settings.json";
 		private Timer _firstTimer = new Timer();
 		private Timer _secondTimer = new Timer();
 		private Timer _countdownTimer = new Timer();
@@ -30,7 +50,9 @@ namespace JudgeScores
 		private Player _secondPlayer = new Player();
 
 		private TimeSpan _countdownTime = TimeSpan.FromSeconds(30);
-		private Dictionary<GamepadButtons, Action> _funcButtons = new Dictionary<GamepadButtons, Action>();
+		private Dictionary<GamepadButtons, MainActionsType> _funcButtonsBinds = new Dictionary<GamepadButtons, MainActionsType>();
+		private readonly Dictionary<MainActionsType, Action> _funcActions = new Dictionary<MainActionsType, Action>();
+
 		private Dictionary<MainActionsType, string> _funcButtonsSounds = new Dictionary<MainActionsType, string>();
 
 		private ConcurrentStack<GamepadAction> _additionalActions = new ConcurrentStack<GamepadAction>();
@@ -100,6 +122,43 @@ namespace JudgeScores
 			});
 
 			ResizeLabels();
+
+			_funcActions = new Dictionary<MainActionsType, Action>()
+			{
+				{
+					MainActionsType.StartTimer,
+					new Action(() => 
+					{
+						_countdownTimer.Start();
+						PlaySoundForAction(MainActionsType.StartTimer);
+					})
+				},
+				{
+					MainActionsType.StopTimer,
+					new Action(() =>
+					{
+						_countdownTimer.Stop();
+						PlaySoundForAction(MainActionsType.StopTimer);
+					})
+				},
+				{
+					MainActionsType.ResetTimer,
+					new Action(() =>
+					{
+						int minutes = (int)Math.Min(59, minutesPartTimer.Value), seconds = (int)Math.Min(59, secondsPartTimer.Value);
+
+						_countdownTime = TimeSpan.FromMinutes(minutes).Add(TimeSpan.FromSeconds(seconds));
+
+						countdownTimer.Text = _countdownTime.ToString(@"mm\:ss");
+
+						_firstPlayer.ResetScores();
+						_secondPlayer.ResetScores();
+						PlaySoundForAction(MainActionsType.ResetTimer);
+					})
+				},
+			};
+
+			LoadBindings();
 		}
 
 		private void PlaySound(string fileName)
@@ -174,9 +233,12 @@ namespace JudgeScores
 
 		private void ProcessButton(GamepadButtons clickedButton, Player player)
 		{
-			if(_funcButtons.ContainsKey(clickedButton))
+			if(_funcButtonsBinds.ContainsKey(clickedButton))
 			{
-				_funcButtons[clickedButton].Invoke();
+				if(_funcActions.TryGetValue(_funcButtonsBinds[clickedButton], out Action action) )
+				{
+					action.Invoke();
+				}
 			}
 			else
 			{
@@ -235,11 +297,7 @@ namespace JudgeScores
 						message: $"Кнопка <{GetButtonName(b)}> назначена на старт таймера",
 						assignAction: btn =>
 						{
-							AssignFunctionalButton(b, () =>
-							{
-								_countdownTimer.Start();
-								PlaySoundForAction(MainActionsType.StartTimer);
-							});
+							AssignFunctionalButton(b, MainActionsType.StartTimer);
 							startTimerButton.Text = GetButtonName(b);
 						});
 				}, GamepadSource.Any);
@@ -264,11 +322,7 @@ namespace JudgeScores
 						message: $"Кнопка <{GetButtonName(b)}> назначена на паузу таймера",
 						assignAction: btn =>
 						{
-							AssignFunctionalButton(b, () =>
-							{
-								_countdownTimer.Stop();
-								PlaySoundForAction(MainActionsType.StopTimer);
-							});
+							AssignFunctionalButton(b, MainActionsType.StopTimer);
 							stopTimerButton.Text = GetButtonName(b);
 						});
 				}, GamepadSource.Any);
@@ -285,15 +339,15 @@ namespace JudgeScores
 			return buttonName;
 		}
 
-		private void AssignFunctionalButton(GamepadButtons arg, Action action)
+		private void AssignFunctionalButton(GamepadButtons arg, MainActionsType actionType)
 		{
-			if(_funcButtons.ContainsKey(arg))
+			if(_funcButtonsBinds.ContainsKey(arg))
 			{
-				_funcButtons[arg] = action;
+				_funcButtonsBinds[arg] = actionType;
 			}
 			else
 			{
-				_funcButtons.Add(arg, action);
+				_funcButtonsBinds.Add(arg, actionType);
 			}
 		}
 
@@ -312,20 +366,12 @@ namespace JudgeScores
 			{
 				AssignButton(button: arg,
 					message: $"Кнопка <{GetButtonName(arg)}> назначена на сброс таймера",
-					assignAction: btn => 
-						AssignFunctionalButton(arg, () =>
-						{
-							int minutes = (int)Math.Min(59, minutesPartTimer.Value), seconds = (int)Math.Min(59, secondsPartTimer.Value);
-
-							_countdownTime = TimeSpan.FromMinutes(minutes).Add(TimeSpan.FromSeconds(seconds));
-
-							countdownTimer.Text = _countdownTime.ToString(@"mm\:ss");
-							resetTimerButton.Text = GetButtonName(arg);
-
-							_firstPlayer.ResetScores();
-							_secondPlayer.ResetScores();
-							PlaySoundForAction(MainActionsType.ResetTimer);
-						}));
+					assignAction: btn =>
+					{
+						AssignFunctionalButton(arg, MainActionsType.ResetTimer);
+						resetTimerButton.Text = GetButtonName(arg);
+					}
+				);
 			}, GamepadSource.Any);
 		}
 
@@ -372,9 +418,9 @@ namespace JudgeScores
 			_additionalActions.Push(new GamepadAction { Action = action, Source = source });
 		}
 
-		private void AssignButton(GamepadButtons button, string message, Action<GamepadButtons> assignAction)
+		private void AssignButton(GamepadButtons button, string message, Action<GamepadButtons> assignAction, bool isShowDialog = true)
 		{
-			if(_funcButtons.ContainsKey(button))
+			if(_funcButtonsBinds.ContainsKey(button) && isShowDialog)
 			{
 				DialogResult response = MessageBox.Show($"Кнопка <{GetButtonName(button)}> уже используется. Переназначить?", "Переназначение кнопок", MessageBoxButtons.YesNo);
 
@@ -383,7 +429,7 @@ namespace JudgeScores
 					return;
 				}
 
-				_funcButtons.Remove(button);
+				_funcButtonsBinds.Remove(button);
 			}
 
 			assignAction(button);
@@ -522,6 +568,172 @@ namespace JudgeScores
 		private void setRoundEndSound_Click(object sender, EventArgs e)
 		{
 			AddMainSound(MainActionsType.RoundComplete);
+		}
+
+		private void SaveBindings()
+		{
+			JsonSerializer serializer = new JsonSerializer();
+			serializer.NullValueHandling = NullValueHandling.Ignore;
+			serializer.Formatting = Formatting.Indented;
+
+			using (StreamWriter sw = File.CreateText(BindingsFilePath))
+			{
+				sw.NewLine = Environment.NewLine;
+
+				using (JsonWriter writer = new JsonTextWriter(sw))
+				{
+					JsonSettings bindings = new JsonSettings
+					{
+						MainFunctionSounds = _funcButtonsSounds,
+						MainFunctionBinds = _funcButtonsBinds,
+						FirstPlayerBinds = _firstPlayer.KeyBindings,
+						SecondPlayerBinds = _secondPlayer.KeyBindings,
+						FirstPlayerSounds = _firstPlayer.SoundBindings,
+						SecondPlayerSounds = _secondPlayer.SoundBindings,
+						CountdownSeconds = _countdownTime.TotalSeconds,
+					};
+
+					serializer.Serialize(writer, bindings);
+				}
+			}
+		}
+
+		private void LoadBindings()
+		{
+			JsonSerializer serializer = new JsonSerializer();
+			serializer.NullValueHandling = NullValueHandling.Ignore;
+			serializer.Formatting = Formatting.Indented;
+
+			using (StreamReader sr = File.OpenText(BindingsFilePath))
+			{
+				string json = sr.ReadToEnd();
+				JsonSettings settings = JsonConvert.DeserializeObject<JsonSettings>(json);
+
+				if (settings != null)
+				{
+					if(settings.CountdownSeconds.HasValue)
+					{
+						_countdownTime = TimeSpan.FromSeconds(settings.CountdownSeconds.Value);
+						countdownTimer.Text = _countdownTime.ToString(@"mm\:ss");
+						secondsPartTimer.Value = _countdownTime.Seconds;
+						minutesPartTimer.Value = _countdownTime.Minutes;
+					}
+
+					_funcButtonsSounds = settings.MainFunctionSounds;
+
+					foreach (var bind in settings.MainFunctionBinds)
+					{
+						AssignFunctionalButton(bind.Key, bind.Value);
+
+						switch (bind.Value)
+						{
+							case MainActionsType.ResetTimer:
+								resetTimerButton.Text = GetButtonName(bind.Key);
+								break;
+							case MainActionsType.StartTimer:
+								startTimerButton.Text = GetButtonName(bind.Key);
+								break;
+							case MainActionsType.StopTimer:
+								stopTimerButton.Text = GetButtonName(bind.Key);
+								break;
+							default:
+								break;
+						}
+					}
+
+					Dictionary<ScoresRange, ScoresBinds> firstPlayerBinds = new Dictionary<ScoresRange, ScoresBinds>
+					{
+						{
+							ScoresRange.One,
+							new ScoresBinds
+							{
+								Label = button1Name1st,
+								MessageFunc = new Func<GamepadButtons, string>((arg) => $"Кнопка <{GetButtonName(arg)}> назначена +1 балл для первого участника"),
+							}
+						},
+						{
+							ScoresRange.Two,
+							new ScoresBinds
+							{
+								Label = button2Name1st,
+								MessageFunc = new Func<GamepadButtons, string>((arg) => $"Кнопка <{GetButtonName(arg)}> назначена +2 балла для первого участника"),
+							}
+						},
+						{
+							ScoresRange.Three,
+							new ScoresBinds
+							{
+								Label = button3Name1st,
+								MessageFunc = new Func<GamepadButtons, string>((arg) => $"Кнопка <{GetButtonName(arg)}> назначена +3 балла для первого участника"),
+							}
+						}
+					};
+
+					Dictionary<ScoresRange, ScoresBinds> secondPlayerBinds = new Dictionary<ScoresRange, ScoresBinds>
+					{
+						{
+							ScoresRange.One,
+							new ScoresBinds
+							{
+								Label = button1Name2nd,
+								MessageFunc = new Func<GamepadButtons, string>((arg) => $"Кнопка <{GetButtonName(arg)}> назначена +1 балл для второго участника"),
+							}
+						},
+						{
+							ScoresRange.Two,
+							new ScoresBinds
+							{
+								Label = button2Name2nd,
+								MessageFunc = new Func<GamepadButtons, string>((arg) => $"Кнопка <{GetButtonName(arg)}> назначена +2 балла для второго участника"),
+							}
+						},
+						{
+							ScoresRange.Three,
+							new ScoresBinds
+							{
+								Label = button3Name2nd,
+								MessageFunc = new Func<GamepadButtons, string>((arg) => $"Кнопка <{GetButtonName(arg)}> назначена +3 балла для второго участника"),
+							}
+						}
+					};
+
+					AssignPlayerBindings(settings.FirstPlayerBinds, firstPlayerBinds, GamepadSource.First, _firstPlayer);
+					AssignPlayerBindings(settings.SecondPlayerBinds, secondPlayerBinds, GamepadSource.First, _secondPlayer);
+					AssignPlayerSounds(settings.FirstPlayerSounds, _firstPlayer);
+					AssignPlayerSounds(settings.SecondPlayerSounds, _secondPlayer);
+				}
+			}
+		}
+
+		private void AssignPlayerBindings(Dictionary<GamepadButtons, ScoresRange> buttonBindings, Dictionary<ScoresRange, ScoresBinds> playerBinds, GamepadSource gamepadSource, Player player)
+		{
+			foreach (var playerBind in buttonBindings)
+			{
+				if (playerBinds.TryGetValue(playerBind.Value, out ScoresBinds scoresBinds))
+				{
+					AssignButton(button: playerBind.Key,
+					message: scoresBinds.MessageFunc(playerBind.Key),
+					assignAction: btn =>
+					{
+						player.AddScoresKeyBinding(playerBind.Value, playerBind.Key);
+						if(scoresBinds.Label != null)
+							scoresBinds.Label.Text = GetButtonName(playerBind.Key);
+					});
+				}
+			}
+		}
+
+		private void AssignPlayerSounds(Dictionary<ScoresRange, string> playerSounds, Player player)
+		{
+			foreach (var sound in playerSounds)
+			{
+				player.AddSoundBinding(sound.Key, sound.Value);
+			}
+		}
+
+		private void ScoresForm_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			SaveBindings();
 		}
 	}
 }
