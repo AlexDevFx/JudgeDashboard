@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Windows.Gaming.Input;
+using AutoMapper;
 
 namespace JudgeScores
 {
@@ -71,9 +72,15 @@ namespace JudgeScores
 			{ GamepadButtons.Y, "Y" },
 		};
 
+		private IMapper _objectMapper;
+
 		public ScoresForm()
 		{
 			InitializeComponent();
+			
+			InitAutoMapper();
+			
+			
 			Gamepad.GamepadAdded += GamepadAdded;
 			Gamepad.GamepadRemoved += GamepadRemoved;
 
@@ -90,6 +97,9 @@ namespace JudgeScores
 			
 			_pauseRoundTimer.Interval = 1000;
 			_pauseRoundTimer.Tick += PauseRoundTimerTick;
+			
+			_extraTimer1.Tick += ExtraTimer1_Tick;
+			_extraTimer2.Tick += ExtraTimer2_Tick;
 
 			countdownTimer.Text = _countdownTime.ToString(@"mm\:ss");
 
@@ -167,10 +177,10 @@ namespace JudgeScores
 					})
 				},
 			};
-			
 			LoadSettings(SettingsFilePath);
 			
 			_mainRoundTimer.Start();
+			
 		}
 
 		private void PauseRoundTimerTick(object sender, EventArgs e)
@@ -196,6 +206,16 @@ namespace JudgeScores
                     _mainRoundTimer.Start();
                 }
             }
+		}
+
+		private void InitAutoMapper()
+		{
+			var config = new MapperConfiguration(cfg => {
+				cfg.CreateMap<RandomTimerSettingsJson, RandomTimerSettings>();
+				cfg.CreateMap<RandomTimerSettings, RandomTimerSettingsJson>();
+			});
+
+			_objectMapper = config.CreateMapper();
 		}
 
 		private void PlaySound(string fileName)
@@ -229,6 +249,37 @@ namespace JudgeScores
 					countdownTimer.Text = _pauseCountdownTime.ToString(@"mm\:ss");
 					_pauseRoundTimer.Start();
 				}
+			}
+		}
+		
+		private void ExtraTimer1_Tick(object sender, EventArgs e)
+		{
+			PlaySoundForAction(MainActionsType.RandomTimer1);
+			if (!IsRoundCompleted && _dashboardSettings.RandomTimer1.IsEnabled)
+			{
+				RestartExtraTimer(_extraTimer1, _dashboardSettings.RandomTimer1.LowerLimit, _dashboardSettings.RandomTimer1.UpperLimit);
+			}
+		}
+
+		private void ExtraTimer2_Tick(object sender, EventArgs e)
+		{
+			if(!string.IsNullOrEmpty(_dashboardSettings.RandomTimer2.FilePath))
+			{
+				string[] files = Directory.GetFiles(_dashboardSettings.RandomTimer2.FilePath, "*.mp3");
+
+				if(files?.Any() == true)
+				{
+					int fileNumber = new Random(DateTime.Now.Second).Next(0, files.Length-1);
+
+					if(fileNumber > 0)
+					{
+						PlaySound(files[fileNumber]);
+					}
+				}
+			}
+			if (!IsRoundCompleted && _dashboardSettings.RandomTimer2.IsEnabled)
+			{
+				RestartExtraTimer(_extraTimer2, _dashboardSettings.RandomTimer2.LowerLimit, _dashboardSettings.RandomTimer2.UpperLimit);
 			}
 		}
 
@@ -650,8 +701,8 @@ namespace JudgeScores
 						PauseSeconds = _dashboardSettings.PauseSeconds,
 						FirstPlayerHitsBinds = _firstPlayer.HitBindings,
 						SecondPlayerHitsBinds = _secondPlayer.HitBindings,
-						RandomTimer1 = _dashboardSettings.RandomTimer1,
-						RandomTimer2 = _dashboardSettings.RandomTimer2,
+						RandomTimer1 = _objectMapper.Map<RandomTimerSettingsJson>(_dashboardSettings.RandomTimer1),
+						RandomTimer2 = _objectMapper.Map<RandomTimerSettingsJson>(_dashboardSettings.RandomTimer2),
 					};
 
 					serializer.Serialize(writer, bindings);
@@ -702,12 +753,14 @@ namespace JudgeScores
 
 					if ( settings.RandomTimer1 != null )
 					{
-						_dashboardSettings.RandomTimer1 = settings.RandomTimer1;
+						_dashboardSettings.RandomTimer1 = _objectMapper.Map<RandomTimerSettings>(settings.RandomTimer1);
+						_dashboardSettings.RandomTimer1.SetAndUpdateControls(rnd1LowerLimit, rnd1UpperLimit, rnd1IsEnable);
 					}
 					
 					if ( settings.RandomTimer2 != null )
 					{
-						_dashboardSettings.RandomTimer2 = settings.RandomTimer1;
+						_dashboardSettings.RandomTimer2 = _objectMapper.Map<RandomTimerSettings>(settings.RandomTimer2);
+						_dashboardSettings.RandomTimer2.SetAndUpdateControls(rnd2LowerLimit, rnd2UpperLimit, rnd2IsEnable);
 					}
 
 					_funcButtonsSounds = settings.MainFunctionSounds;
@@ -997,9 +1050,31 @@ namespace JudgeScores
 			}
 		}
 
+		private void RestartExtraTimer(Timer timer, int lowerLimit, int upperLimit)
+		{
+			timer.Stop();
+			Random rnd = new Random(DateTime.Now.Second);
+			int min = Math.Min(lowerLimit, upperLimit);
+			int max = Math.Min(lowerLimit, upperLimit);
+			int randomValue = rnd.Next(min, max);
+
+			timer.Interval = randomValue * 1000;
+			timer.Start();
+		}
+
 		private void rnd1IsEnable_CheckedChanged(object sender, EventArgs e)
 		{
 			_dashboardSettings.RandomTimer1.IsEnabled = rnd1IsEnable.Checked;
+
+			if (!IsRoundCompleted && _dashboardSettings.RandomTimer1.IsEnabled)
+			{
+				RestartExtraTimer(_extraTimer1, _dashboardSettings.RandomTimer1.LowerLimit, _dashboardSettings.RandomTimer1.UpperLimit);
+			}
+
+			if (!_dashboardSettings.RandomTimer1.IsEnabled && _extraTimer1.Enabled)
+			{
+				_extraTimer1.Stop();
+			}
 		}
 
 		private void rnd1LowerLimit_ValueChanged(object sender, EventArgs e)
@@ -1020,6 +1095,16 @@ namespace JudgeScores
 		private void rnd2IsEnable_CheckedChanged(object sender, EventArgs e)
 		{
 			_dashboardSettings.RandomTimer2.IsEnabled = rnd2IsEnable.Checked;
+			
+			if (!IsRoundCompleted && _dashboardSettings.RandomTimer2.IsEnabled)
+			{
+				RestartExtraTimer(_extraTimer2, _dashboardSettings.RandomTimer2.LowerLimit, _dashboardSettings.RandomTimer2.UpperLimit);
+			}
+
+			if (!_dashboardSettings.RandomTimer2.IsEnabled && _extraTimer2.Enabled)
+			{
+				_extraTimer2.Stop();
+			}
 		}
 
 		private void rnd2LowerLimit_ValueChanged(object sender, EventArgs e)
@@ -1034,7 +1119,10 @@ namespace JudgeScores
 
 		private void rnd2SetSound_Click(object sender, EventArgs e)
 		{
-			_dashboardSettings.RandomTimer2.FilePath = AddMainSound(MainActionsType.RandomTimer2);
+			if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+			{
+				_dashboardSettings.RandomTimer2.FilePath = folderBrowserDialog.SelectedPath;
+			}
 		}
 	}
 }

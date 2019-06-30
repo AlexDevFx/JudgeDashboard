@@ -10,8 +10,8 @@ namespace JudgeScores
 			public double RoundSeconds { get; set; }
 			public double PauseSeconds { get; set; }
 			
-			public RandomTimers RandomTimer1 { get; set; }
-			public RandomTimers RandomTimer2 { get; set; }
+			public RandomTimerSettings RandomTimer1 { get; set; }
+			public RandomTimerSettings RandomTimer2 { get; set; }
 		}
 	}
 }

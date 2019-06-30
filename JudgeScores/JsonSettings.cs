@@ -20,8 +20,16 @@ namespace JudgeScores
 			
 			public int? RoundsCount { get; set; }
 			
-			public RandomTimers RandomTimer1 { get; set; }
-			public RandomTimers RandomTimer2 { get; set; }
+			public RandomTimerSettingsJson RandomTimer1 { get; set; }
+			public RandomTimerSettingsJson RandomTimer2 { get; set; }
+		}
+		
+		public class RandomTimerSettingsJson
+		{
+			public bool IsEnabled { get; set; }
+			public int LowerLimit { get; set; }
+			public int UpperLimit { get; set; }
+			public string FilePath { get; set; }
 		}
 	}
 }
