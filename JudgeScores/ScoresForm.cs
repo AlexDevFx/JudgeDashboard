@@ -179,8 +179,6 @@ namespace JudgeScores
 			};
 			LoadSettings(SettingsFilePath);
 			
-			StartRound();
-			
 		}
 
 		private void PauseRoundTimerTick(object sender, EventArgs e)
