@@ -6,9 +6,9 @@ namespace JudgeScores
 {
 	public enum ScoresRange
 	{
-		One = 1,
-		Two = 2,
-		Three = 3
+		First = 1,
+		Second = 2,
+		Third = 3
 	}
 
 	public class Player
@@ -16,6 +16,14 @@ namespace JudgeScores
 		public ushort Scores { get; private set; }
 		public Dictionary<GamepadButtons, ScoresRange> KeyBindings { get; private set; } = new Dictionary<GamepadButtons, ScoresRange>();
 		public Dictionary<ScoresRange, string> SoundBindings { get; private set; } = new Dictionary<ScoresRange, string>();
+
+		public Dictionary<ScoresRange, ushort> HitBindings { get; private set; } = new Dictionary<ScoresRange, ushort>
+		{
+			{ ScoresRange.First, 1 },
+			{ ScoresRange.Second, 2 },
+			{ ScoresRange.Third, 3 },
+		};
+		
 		private Action _setHitAction;
 		private Action<string> _soundAction;
 
@@ -30,9 +38,12 @@ namespace JudgeScores
 			if (!KeyBindings.ContainsKey(button))
 				return;
 
-			ushort scores = (ushort)KeyBindings[button];
-			if (Scores + scores < short.MaxValue)
-				Scores += scores;
+			if ( !HitBindings.ContainsKey(KeyBindings[button]) )
+				return;
+			
+			ushort hitsAmount = HitBindings[KeyBindings[button]];
+			if (Scores + hitsAmount < short.MaxValue)
+				Scores += hitsAmount;
 
 			_setHitAction?.Invoke();
 
@@ -56,6 +67,18 @@ namespace JudgeScores
 			else
 			{
 				KeyBindings.Add(button, scoresRange);
+			}
+		}
+		
+		public void AddScoresHitsAmount(ScoresRange scoresRange, ushort hitsAmount)
+		{
+			if(HitBindings.ContainsKey(scoresRange))
+			{
+				HitBindings[scoresRange] = hitsAmount;
+			}
+			else
+			{
+				HitBindings.Add(scoresRange, hitsAmount);
 			}
 		}
 
