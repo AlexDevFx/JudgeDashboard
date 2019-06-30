@@ -316,7 +316,7 @@
 			// 
 			this.rnd2IsEnable.Location = new System.Drawing.Point(7, 17);
 			this.rnd2IsEnable.Name = "rnd2IsEnable";
-			this.rnd2IsEnable.Size = new System.Drawing.Size(149, 25);
+			this.rnd2IsEnable.Size = new System.Drawing.Size(160, 25);
 			this.rnd2IsEnable.TabIndex = 0;
 			this.rnd2IsEnable.Text = "Активировать/Отключить";
 			this.rnd2IsEnable.UseVisualStyleBackColor = true;
@@ -420,7 +420,7 @@
 			// 
 			this.rnd1IsEnable.Location = new System.Drawing.Point(7, 17);
 			this.rnd1IsEnable.Name = "rnd1IsEnable";
-			this.rnd1IsEnable.Size = new System.Drawing.Size(149, 25);
+			this.rnd1IsEnable.Size = new System.Drawing.Size(167, 25);
 			this.rnd1IsEnable.TabIndex = 0;
 			this.rnd1IsEnable.Text = "Активировать/Отключить";
 			this.rnd1IsEnable.UseVisualStyleBackColor = true;
