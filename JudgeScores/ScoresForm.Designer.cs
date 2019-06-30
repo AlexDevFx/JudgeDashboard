@@ -160,7 +160,7 @@
 			this.ScoresPage.Controls.Add(this.firstPlayerScores);
 			this.ScoresPage.Location = new System.Drawing.Point(4, 22);
 			this.ScoresPage.Name = "ScoresPage";
-			this.ScoresPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+			this.ScoresPage.Padding = new System.Windows.Forms.Padding(3);
 			this.ScoresPage.Size = new System.Drawing.Size(1023, 473);
 			this.ScoresPage.TabIndex = 0;
 			this.ScoresPage.Text = "Раунд";
@@ -212,7 +212,7 @@
 			this.SettingsPage.Controls.Add(this.minutesPartTimer);
 			this.SettingsPage.Location = new System.Drawing.Point(4, 22);
 			this.SettingsPage.Name = "SettingsPage";
-			this.SettingsPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+			this.SettingsPage.Padding = new System.Windows.Forms.Padding(3);
 			this.SettingsPage.Size = new System.Drawing.Size(1023, 473);
 			this.SettingsPage.TabIndex = 1;
 			this.SettingsPage.Text = "Настройки";
@@ -226,9 +226,9 @@
 			this.groupBox5.Controls.Add(this.rnd2LowerLimit);
 			this.groupBox5.Controls.Add(this.rnd2UpperLimit);
 			this.groupBox5.Controls.Add(this.rnd2IsEnable);
-			this.groupBox5.Location = new System.Drawing.Point(816, 232);
+			this.groupBox5.Location = new System.Drawing.Point(781, 225);
 			this.groupBox5.Name = "groupBox5";
-			this.groupBox5.Size = new System.Drawing.Size(237, 150);
+			this.groupBox5.Size = new System.Drawing.Size(221, 150);
 			this.groupBox5.TabIndex = 51;
 			this.groupBox5.TabStop = false;
 			this.groupBox5.Text = "Слуйчайный таймер II";
@@ -246,7 +246,7 @@
 			// rnd2SetSound
 			// 
 			this.rnd2SetSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.rnd2SetSound.Location = new System.Drawing.Point(6, 117);
+			this.rnd2SetSound.Location = new System.Drawing.Point(9, 118);
 			this.rnd2SetSound.Name = "rnd2SetSound";
 			this.rnd2SetSound.Size = new System.Drawing.Size(123, 23);
 			this.rnd2SetSound.TabIndex = 31;
@@ -330,9 +330,9 @@
 			this.groupBox4.Controls.Add(this.rnd1LowerLimit);
 			this.groupBox4.Controls.Add(this.rnd1UpperLimit);
 			this.groupBox4.Controls.Add(this.rnd1IsEnable);
-			this.groupBox4.Location = new System.Drawing.Point(567, 232);
+			this.groupBox4.Location = new System.Drawing.Point(553, 225);
 			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.Size = new System.Drawing.Size(237, 150);
+			this.groupBox4.Size = new System.Drawing.Size(222, 150);
 			this.groupBox4.TabIndex = 50;
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "Слуйчайный таймер I";
@@ -350,7 +350,7 @@
 			// rnd1SetSound
 			// 
 			this.rnd1SetSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.rnd1SetSound.Location = new System.Drawing.Point(6, 117);
+			this.rnd1SetSound.Location = new System.Drawing.Point(7, 117);
 			this.rnd1SetSound.Name = "rnd1SetSound";
 			this.rnd1SetSound.Size = new System.Drawing.Size(123, 23);
 			this.rnd1SetSound.TabIndex = 31;
@@ -695,7 +695,7 @@
 			this.groupBox2.Controls.Add(this.secondPlayerTwoValue);
 			this.groupBox2.Controls.Add(this.secondPlayerOneValue);
 			this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			this.groupBox2.Location = new System.Drawing.Point(567, 91);
+			this.groupBox2.Location = new System.Drawing.Point(566, 96);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Size = new System.Drawing.Size(447, 119);
 			this.groupBox2.TabIndex = 35;
@@ -1122,7 +1122,7 @@
 			this.loggerPage.Controls.Add(this.loggerTextbox);
 			this.loggerPage.Location = new System.Drawing.Point(4, 22);
 			this.loggerPage.Name = "loggerPage";
-			this.loggerPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+			this.loggerPage.Padding = new System.Windows.Forms.Padding(3);
 			this.loggerPage.Size = new System.Drawing.Size(1023, 473);
 			this.loggerPage.TabIndex = 2;
 			this.loggerPage.Text = "Лог";
