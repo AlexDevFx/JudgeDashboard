@@ -135,12 +135,12 @@ namespace JudgeScores
 					{
 						if ( IsRoundCompleted )
 						{
-							_mainRoundTimer.Start();
+							StartRound();
 							PlaySoundForAction(MainActionsType.StartTimer);
 						}
 						else
 						{
-							_mainRoundTimer.Stop();
+							StopRound();
 							PlaySoundForAction(MainActionsType.StopTimer);
 						}
 					})
@@ -149,14 +149,14 @@ namespace JudgeScores
 					MainActionsType.StopTimer,
 					new Action(() =>
 					{
-						if ( IsRoundCompleted )
+							if ( IsRoundCompleted )
 						{
-							_mainRoundTimer.Start();
+							StartRound();
 							PlaySoundForAction(MainActionsType.StartTimer);
 						}
 						else
 						{
-							_mainRoundTimer.Stop();
+							StopRound();
 							PlaySoundForAction(MainActionsType.StopTimer);
 						}
 					})
@@ -179,7 +179,7 @@ namespace JudgeScores
 			};
 			LoadSettings(SettingsFilePath);
 			
-			_mainRoundTimer.Start();
+			StartRound();
 			
 		}
 
@@ -203,7 +203,7 @@ namespace JudgeScores
                     PlaySoundForAction(MainActionsType.StartTimer);
                     countdownTimer.ForeColor = Color.White;
                     countdownTimer.Text = _countdownTime.ToString(@"mm\:ss");
-                    _mainRoundTimer.Start();
+                    StartRound();
                 }
             }
 		}
@@ -238,7 +238,7 @@ namespace JudgeScores
 
 			if (_countdownTime.TotalSeconds <= 0)
 			{
-				_mainRoundTimer.Stop();
+				StopRound();
 				PlaySoundForAction(MainActionsType.RoundComplete);
 				_dashboardSettings.RoundsCompleted++;
 			
@@ -281,6 +281,27 @@ namespace JudgeScores
 			{
 				RestartExtraTimer(_extraTimer2, _dashboardSettings.RandomTimer2.LowerLimit, _dashboardSettings.RandomTimer2.UpperLimit);
 			}
+		}
+
+		private void StartRound()
+		{
+			_mainRoundTimer.Start();
+
+			if (_dashboardSettings.RandomTimer1.IsEnabled)
+			{
+				RestartExtraTimer(_extraTimer1, _dashboardSettings.RandomTimer1.LowerLimit, _dashboardSettings.RandomTimer1.UpperLimit);
+			}
+			if (_dashboardSettings.RandomTimer2.IsEnabled)
+			{
+				RestartExtraTimer(_extraTimer2, _dashboardSettings.RandomTimer2.LowerLimit, _dashboardSettings.RandomTimer2.UpperLimit);
+			}
+		}
+
+		private void StopRound()
+		{
+			_mainRoundTimer.Stop();
+			_extraTimer1.Stop();
+			_extraTimer2.Stop();
 		}
 
 		private void FirstTimer_Tick(object sender, EventArgs e)
