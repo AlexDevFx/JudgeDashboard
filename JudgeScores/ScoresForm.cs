@@ -271,7 +271,7 @@ namespace JudgeScores
 				{
 					int fileNumber = new Random(DateTime.Now.Second).Next(0, files.Length-1);
 
-					if(fileNumber > 0)
+					if(fileNumber >= 0)
 					{
 						PlaySound(files[fileNumber]);
 					}
@@ -287,11 +287,11 @@ namespace JudgeScores
 		{
 			_mainRoundTimer.Start();
 
-			if (_dashboardSettings.RandomTimer1.IsEnabled)
+			if (_dashboardSettings?.RandomTimer1?.IsEnabled == true)
 			{
 				RestartExtraTimer(_extraTimer1, _dashboardSettings.RandomTimer1.LowerLimit, _dashboardSettings.RandomTimer1.UpperLimit);
 			}
-			if (_dashboardSettings.RandomTimer2.IsEnabled)
+			if (_dashboardSettings?.RandomTimer2?.IsEnabled == true)
 			{
 				RestartExtraTimer(_extraTimer2, _dashboardSettings.RandomTimer2.LowerLimit, _dashboardSettings.RandomTimer2.UpperLimit);
 			}
@@ -742,6 +742,9 @@ namespace JudgeScores
 			serializer.NullValueHandling = NullValueHandling.Ignore;
 			serializer.Formatting = Formatting.Indented;
 
+			_dashboardSettings.RandomTimer1 = new RandomTimerSettings();
+			_dashboardSettings.RandomTimer2 = new RandomTimerSettings();
+
 			using (StreamReader sr = File.OpenText(fileName))
 			{
 				string json = sr.ReadToEnd();
@@ -1075,12 +1078,15 @@ namespace JudgeScores
 		{
 			timer.Stop();
 			Random rnd = new Random(DateTime.Now.Second);
-			int min = Math.Min(lowerLimit, upperLimit);
-			int max = Math.Min(lowerLimit, upperLimit);
+			int min = Math.Max(1, Math.Min(lowerLimit, upperLimit));
+			int max = Math.Max(lowerLimit, upperLimit);
 			int randomValue = rnd.Next(min, max);
 
-			timer.Interval = randomValue * 1000;
-			timer.Start();
+			if(randomValue > 0)
+			{
+				timer.Interval = randomValue * 1000;
+				timer.Start();
+			}
 		}
 
 		private void rnd1IsEnable_CheckedChanged(object sender, EventArgs e)

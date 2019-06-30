@@ -16,9 +16,9 @@ namespace JudgeScores
 
 		public void UpdateControls()
 		{
-			if (UpperLimitControl != null)
+			if (UpperLimitControl != null && UpperLimit > 0)
 				UpperLimitControl.Value = UpperLimit;
-			if (LowerLimitControl != null)
+			if (LowerLimitControl != null && LowerLimit > 0)
 				LowerLimitControl.Value = LowerLimit;
 			if (IsEnabledControl != null)
 				IsEnabledControl.Checked = IsEnabled;
