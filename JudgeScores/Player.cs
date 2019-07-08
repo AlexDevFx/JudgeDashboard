@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Windows.Gaming.Input;
 
 namespace JudgeScores
 {
@@ -14,7 +13,6 @@ namespace JudgeScores
 	public class Player
 	{
 		public ushort Scores { get; private set; }
-		public Dictionary<GamepadButtons, ScoresRange> KeyBindings { get; private set; } = new Dictionary<GamepadButtons, ScoresRange>();
 		public Dictionary<ScoresRange, string> SoundBindings { get; private set; } = new Dictionary<ScoresRange, string>();
 
 		public Dictionary<ScoresRange, ushort> HitBindings { get; private set; } = new Dictionary<ScoresRange, ushort>
@@ -31,31 +29,6 @@ namespace JudgeScores
 		{
 			_setHitAction = setHitAction;
 			_soundAction = soundAction;
-		}
-
-		public void SetHit(GamepadButtons button)
-		{
-			if (!KeyBindings.ContainsKey(button))
-				return;
-
-			if ( !HitBindings.ContainsKey(KeyBindings[button]) )
-				return;
-			
-			ushort hitsAmount = HitBindings[KeyBindings[button]];
-			if (Scores + hitsAmount < short.MaxValue)
-				Scores += hitsAmount;
-
-			_setHitAction?.Invoke();
-
-			if(SoundBindings.ContainsKey(KeyBindings[button]))
-			{
-				string soundFile = SoundBindings[KeyBindings[button]];
-
-				if(!string.IsNullOrEmpty(soundFile) && !string.IsNullOrWhiteSpace(soundFile))
-				{
-					_soundAction(soundFile);
-				}
-			}
 		}
 		
 		public void SetHit(ScoresRange range)
@@ -77,18 +50,6 @@ namespace JudgeScores
 				{
 					_soundAction(soundFile);
 				}
-			}
-		}
-
-		public void AddScoresKeyBinding(ScoresRange scoresRange, GamepadButtons button)
-		{
-			if(KeyBindings.ContainsKey(button))
-			{
-				KeyBindings[button] = scoresRange;
-			}
-			else
-			{
-				KeyBindings.Add(button, scoresRange);
 			}
 		}
 		

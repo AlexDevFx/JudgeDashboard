@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using Windows.Gaming.Input;
 
 namespace JudgeScores
 {
@@ -14,7 +13,6 @@ namespace JudgeScores
 
 	public class GamepadAction
 	{
-		public Action<GamepadButtons> Gamepad { get; set; }
 		public Action<Keys> Keyboard { get; set; }
 		public InputButtonSource[] Sources { get; set; }
 	}
