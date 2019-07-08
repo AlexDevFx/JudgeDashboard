@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms;
 
 namespace JudgeScores
@@ -6,7 +7,7 @@ namespace JudgeScores
 	{
 		public bool IsEnabled{ get; set; }
 
-		public int LowerLimit{ get; set; }
+		public int LowerLimit { get; set; }
 		public int UpperLimit { get; set; }
 		public string FilePath { get; set; }
 
@@ -17,9 +18,9 @@ namespace JudgeScores
 		public void UpdateControls()
 		{
 			if (UpperLimitControl != null)
-				UpperLimitControl.Value = UpperLimit;
+				UpperLimitControl.Value = Math.Max(59, Math.Min(1, UpperLimit));
 			if (LowerLimitControl != null)
-				LowerLimitControl.Value = LowerLimit;
+				LowerLimitControl.Value =  Math.Max(59, Math.Min(1,LowerLimit));
 			if (IsEnabledControl != null)
 				IsEnabledControl.Checked = IsEnabled;
 		}

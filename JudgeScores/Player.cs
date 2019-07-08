@@ -57,6 +57,28 @@ namespace JudgeScores
 				}
 			}
 		}
+		
+		public void SetHit(ScoresRange range)
+		{
+			if ( !HitBindings.ContainsKey(range) )
+				return;
+			
+			ushort hitsAmount = HitBindings[range];
+			if (Scores + hitsAmount < short.MaxValue)
+				Scores += hitsAmount;
+
+			_setHitAction?.Invoke();
+
+			if(SoundBindings.ContainsKey(range))
+			{
+				string soundFile = SoundBindings[range];
+
+				if(!string.IsNullOrEmpty(soundFile) && !string.IsNullOrWhiteSpace(soundFile))
+				{
+					_soundAction(soundFile);
+				}
+			}
+		}
 
 		public void AddScoresKeyBinding(ScoresRange scoresRange, GamepadButtons button)
 		{

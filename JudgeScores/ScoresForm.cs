@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Windows.Gaming.Input;
 using AutoMapper;
+using Gma.System.MouseKeyHook;
 
 namespace JudgeScores
 {
@@ -17,7 +18,8 @@ namespace JudgeScores
 		private class ScoresBinds
 		{
 			public Label Label { get; set; }
-			public Func<GamepadButtons, string> MessageFunc { get; set; }
+			public Func<GamepadButtons, string> MessageFuncStr { get; set; }
+			public Func<Keys, string> MessageFuncChar { get; set; }
 		}
 
 		private const string SettingsFilePath = "settings.json";
@@ -36,12 +38,14 @@ namespace JudgeScores
 
 		private TimeSpan _countdownTime = TimeSpan.FromSeconds(30);
 		private TimeSpan _pauseCountdownTime = TimeSpan.FromSeconds(30);
-		private Dictionary<GamepadButtons, MainActionsType> _funcButtonsBinds = new Dictionary<GamepadButtons, MainActionsType>();
-		private readonly Dictionary<MainActionsType, Action> _funcActions;
+		//private Dictionary<GamepadButtons, MainActionTypes> _funcButtonsBinds = new Dictionary<GamepadButtons, MainActionTypes>();
+		//private readonly Dictionary<MainActionTypes, Action> _funcActions;
+		
+		private readonly ActionsProvider _actionsProvider = new ActionsProvider();
 
-		private Dictionary<MainActionsType, string> _funcButtonsSounds = new Dictionary<MainActionsType, string>();
+		private Dictionary<MainActionTypes, string> _funcButtonsSounds = new Dictionary<MainActionTypes, string>();
 
-		private ConcurrentStack<GamepadAction> _additionalActions = new ConcurrentStack<GamepadAction>();
+		private readonly ConcurrentStack<GamepadAction> _additionalActions = new ConcurrentStack<GamepadAction>();
 		private bool IsRoundCompleted => !_mainRoundTimer.Enabled;
 
 		private DashboardSettings _dashboardSettings = new DashboardSettings
@@ -73,13 +77,21 @@ namespace JudgeScores
 		};
 
 		private IMapper _objectMapper;
+		
+		private readonly ActionProcessor _commonActionsProcessor = new ActionProcessor();
+		private readonly ActionProcessor _firstPlayerActionsProcessor = new ActionProcessor();
+		private readonly ActionProcessor _secondPlayerActionsProcessor = new ActionProcessor();
+		
+		private readonly IKeyboardMouseEvents _globalHook;
 
 		public ScoresForm()
 		{
 			InitializeComponent();
 			
 			InitAutoMapper();
-			
+
+			_globalHook = Hook.AppEvents();
+			_globalHook.KeyUp += GlobalHookOnKeyUp;
 			
 			Gamepad.GamepadAdded += GamepadAdded;
 			Gamepad.GamepadRemoved += GamepadRemoved;
@@ -103,18 +115,15 @@ namespace JudgeScores
 
 			countdownTimer.Text = _countdownTime.ToString(@"mm\:ss");
 
-			firstPlayerScores.Text = "0";
-			secondPlayerScores.Text = "0";
+			firstPlayerScores.Text = @"0";
+			secondPlayerScores.Text = @"0";
 			notifyText.Text = "";
 
 			_firstPlayer.Init(() =>
 			{
 				firstPlayerScores.Text = _firstPlayer.Scores.ToString("D");
 			}, 
-			(file) => 
-			{
-				PlaySound(file);
-			});
+			PlaySound);
 
 			_secondPlayer.Init(() =>
 			{
@@ -127,60 +136,111 @@ namespace JudgeScores
 
 			ResizeLabels();
 
-			_funcActions = new Dictionary<MainActionsType, Action>()
-			{
-				{
-					MainActionsType.StartTimer,
-					new Action(() => 
-					{
-						if ( IsRoundCompleted )
-						{
-							StartRound();
-							PlaySoundForAction(MainActionsType.StartTimer);
-						}
-						else
-						{
-							StopRound();
-							PlaySoundForAction(MainActionsType.StopTimer);
-						}
-					})
-				},
-				{
-					MainActionsType.StopTimer,
-					new Action(() =>
-					{
-							if ( IsRoundCompleted )
-						{
-							StartRound();
-							PlaySoundForAction(MainActionsType.StartTimer);
-						}
-						else
-						{
-							StopRound();
-							PlaySoundForAction(MainActionsType.StopTimer);
-						}
-					})
-				},
-				{
-					MainActionsType.ResetTimer,
-					new Action(() =>
-					{
-						int minutes = (int)Math.Min(59, minutesPartTimer.Value), seconds = (int)Math.Min(59, secondsPartTimer.Value);
+			InitActions();
 
-						_countdownTime = TimeSpan.FromMinutes(minutes).Add(TimeSpan.FromSeconds(seconds));
-
-						countdownTimer.Text = _countdownTime.ToString(@"mm\:ss");
-
-						_firstPlayer.ResetScores();
-						_secondPlayer.ResetScores();
-						PlaySoundForAction(MainActionsType.ResetTimer);
-					})
-				},
-			};
 			LoadSettings(SettingsFilePath);
 			
-			StartRound();
+			//StartRound();
 			
+		}
+
+		private void GlobalHookOnKeyUp(object sender, KeyEventArgs e)
+		{
+			if(_additionalActions.TryPeek(out var actionData))
+			{
+				if (actionData.Sources.Contains(InputButtonSource.Keyboard) || actionData.Sources.Contains(InputButtonSource.Any));
+				{
+					actionData.Keyboard(e.KeyCode);
+					_additionalActions.TryPop(out actionData);
+				}
+			}
+			else
+			{
+				ProcessButton(e.KeyCode);
+			}
+		}
+
+		private void InitActions()
+		{
+			_commonActionsProcessor.AddAction(MainActionTypes.StartTimer, () =>
+			{
+				if (IsRoundCompleted)
+				{
+					StartRound();
+					PlaySoundForAction(MainActionTypes.StartTimer);
+				}
+				else
+				{
+					StopRound();
+					PlaySoundForAction(MainActionTypes.StopTimer);
+				}
+			});
+
+			_commonActionsProcessor.AddAction(MainActionTypes.StopTimer, () =>
+			{
+				if (IsRoundCompleted)
+				{
+					StartRound();
+					PlaySoundForAction(MainActionTypes.StartTimer);
+				}
+				else
+				{
+					StopRound();
+					PlaySoundForAction(MainActionTypes.StopTimer);
+				}
+			});
+
+			_commonActionsProcessor.AddAction(
+				MainActionTypes.ResetTimer,
+				() =>
+				{
+					int minutes = (int) Math.Min(59, minutesPartTimer.Value),
+						seconds = (int) Math.Min(59, secondsPartTimer.Value);
+
+					_countdownTime = TimeSpan.FromMinutes(minutes).Add(TimeSpan.FromSeconds(seconds));
+
+					countdownTimer.Text = _countdownTime.ToString(@"mm\:ss");
+
+					_firstPlayer.ResetScores();
+					_secondPlayer.ResetScores();
+					PlaySoundForAction(MainActionTypes.ResetTimer);
+				});
+
+			_firstPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit1Level, () =>
+			{
+				if (!IsRoundCompleted)
+					_firstPlayer.SetHit(ScoresRange.First);
+			});
+
+			_firstPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit2Level, () =>
+			{
+				if (!IsRoundCompleted)
+					_firstPlayer.SetHit(ScoresRange.Second);
+			});
+
+			_firstPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit3Level, () =>
+			{
+				if (!IsRoundCompleted)
+					_firstPlayer.SetHit(ScoresRange.Third);
+			});
+
+			_secondPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit1Level, () =>
+			{
+				if (!IsRoundCompleted)
+					_secondPlayer.SetHit(ScoresRange.First);
+			});
+
+			_secondPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit2Level, () =>
+			{
+				if (!IsRoundCompleted)
+					_secondPlayer.SetHit(ScoresRange.Second);
+			});
+
+			_secondPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit3Level, () =>
+			{
+				if (!IsRoundCompleted)
+					_secondPlayer.SetHit(ScoresRange.Third);
+			});
 		}
 
 		private void PauseRoundTimerTick(object sender, EventArgs e)
@@ -191,7 +251,7 @@ namespace JudgeScores
             
             if (Math.Abs(_pauseCountdownTime.TotalSeconds - 10) < 1)
             {
-            	PlaySoundForAction(MainActionsType.PauseRoundRemain10Seconds);
+            	PlaySoundForAction(MainActionTypes.PauseRoundRemain10Seconds);
             }
 
             if (_pauseCountdownTime.TotalSeconds <= 0)
@@ -200,7 +260,7 @@ namespace JudgeScores
                 if ( _dashboardSettings.RoundsCount - _dashboardSettings.RoundsCompleted > 0 )
                 {
                     _countdownTime = TimeSpan.FromSeconds(_dashboardSettings.RoundSeconds);
-                    PlaySoundForAction(MainActionsType.StartTimer);
+                    PlaySoundForAction(MainActionTypes.StartTimer);
                     countdownTimer.ForeColor = Color.White;
                     countdownTimer.Text = _countdownTime.ToString(@"mm\:ss");
                     StartRound();
@@ -233,13 +293,13 @@ namespace JudgeScores
 
 			if (Math.Abs(_countdownTime.TotalSeconds - 10) < 1)
 			{
-				PlaySoundForAction(MainActionsType.RoundRemain10Seconds);
+				PlaySoundForAction(MainActionTypes.RoundRemain10Seconds);
 			}
 
 			if (_countdownTime.TotalSeconds <= 0)
 			{
 				StopRound();
-				PlaySoundForAction(MainActionsType.RoundComplete);
+				PlaySoundForAction(MainActionTypes.RoundComplete);
 				_dashboardSettings.RoundsCompleted++;
 			
 				if ( _dashboardSettings.RoundsCount - _dashboardSettings.RoundsCompleted > 0 )
@@ -254,7 +314,8 @@ namespace JudgeScores
 		
 		private void ExtraTimer1_Tick(object sender, EventArgs e)
 		{
-			PlaySoundForAction(MainActionsType.RandomTimer1);
+			PlaySoundForAction(MainActionTypes.RandomTimer1);
+			
 			if (!IsRoundCompleted && _dashboardSettings.RandomTimer1.IsEnabled)
 			{
 				RestartExtraTimer(_extraTimer1, _dashboardSettings.RandomTimer1.LowerLimit, _dashboardSettings.RandomTimer1.UpperLimit);
@@ -267,7 +328,7 @@ namespace JudgeScores
 			{
 				string[] files = Directory.GetFiles(_dashboardSettings.RandomTimer2.FilePath, "*.mp3");
 
-				if(files?.Any() == true)
+				if(files.Any() == true)
 				{
 					int fileNumber = new Random(DateTime.Now.Second).Next(0, files.Length-1);
 
@@ -287,11 +348,11 @@ namespace JudgeScores
 		{
 			_mainRoundTimer.Start();
 
-			if (_dashboardSettings.RandomTimer1.IsEnabled)
+			if (_dashboardSettings?.RandomTimer1?.IsEnabled == true)
 			{
 				RestartExtraTimer(_extraTimer1, _dashboardSettings.RandomTimer1.LowerLimit, _dashboardSettings.RandomTimer1.UpperLimit);
 			}
-			if (_dashboardSettings.RandomTimer2.IsEnabled)
+			if (_dashboardSettings?.RandomTimer2?.IsEnabled == true)
 			{
 				RestartExtraTimer(_extraTimer2, _dashboardSettings.RandomTimer2.LowerLimit, _dashboardSettings.RandomTimer2.UpperLimit);
 			}
@@ -312,17 +373,18 @@ namespace JudgeScores
 			{
 				if(_additionalActions.TryPeek(out var actionData))
 				{
-					if (actionData.Source == GamepadSource.First || actionData.Source == GamepadSource.Any)
+					if (actionData.Sources.Contains(InputButtonSource.Keyboard) || actionData.Sources.Contains(InputButtonSource.Any))
 					{
-						actionData.Action(clickedButton.Value);
+						actionData.Gamepad(clickedButton.Value);
 						_additionalActions.TryPop(out actionData);
 					}
 				}
 				else
 				{
 					Log($"1ый геймпад кнопка <{GetButtonName(clickedButton.Value)}> нажата");
-					ProcessButton(clickedButton.Value, _firstPlayer);
-					ProcessButton(clickedButton.Value, _secondPlayer);
+					/*ProcessButton(clickedButton.Value, _firstPlayer);
+					ProcessButton(clickedButton.Value, _secondPlayer);*/
+					ProcessButton(clickedButton.Value);
 				}
 			}
 		}
@@ -335,21 +397,21 @@ namespace JudgeScores
 			{
 				if (_additionalActions.TryPeek(out var actionData))
 				{
-					if(actionData.Source == GamepadSource.Second || actionData.Source == GamepadSource.Any)
+					if (actionData.Sources.Contains(InputButtonSource.Keyboard) || actionData.Sources.Contains(InputButtonSource.Any))
 					{ 
-						actionData.Action(clickedButton.Value);
+						actionData.Gamepad(clickedButton.Value);
 						_additionalActions.TryPop(out actionData);
 					}
 				}
 				else
 				{
 					Log($"2ой геймпад кнопка <{GetButtonName(clickedButton.Value)}> нажата");
-					ProcessButton(clickedButton.Value, _secondPlayer);
+					ProcessButton(clickedButton.Value);
 				}
 			}
 		}
 
-		private void ProcessButton(GamepadButtons clickedButton, Player player)
+		/*private void ProcessButton(GamepadButtons clickedButton, Player player)
 		{
 			if(_funcButtonsBinds.ContainsKey(clickedButton))
 			{
@@ -363,7 +425,29 @@ namespace JudgeScores
 				if(!IsRoundCompleted)
 					player.SetHit(clickedButton);
 			}
+		}*/
+
+		private void ProcessButton(Keys button)
+		{
+			_commonActionsProcessor.PerformAction(button);
+			_firstPlayerActionsProcessor.PerformAction(button);
+			_secondPlayerActionsProcessor.PerformAction(button);
 		}
+		
+		private void ProcessButton(GamepadButtons button)
+		{
+			_commonActionsProcessor.PerformAction(button);
+			_firstPlayerActionsProcessor.PerformAction(button);
+			_secondPlayerActionsProcessor.PerformAction(button);
+		}
+		
+		/*private void PerformAction(MainActionTypes? actionType)
+		{
+			if (actionType.HasValue && _funcActions.TryGetValue(actionType.Value, out Action action))
+			{
+				action.Invoke();
+			}
+		}*/
 
 		private void GamepadRemoved(object sender, Gamepad e)
 		{
@@ -389,12 +473,12 @@ namespace JudgeScores
 
 		private void Log(string text)
 		{
-			string logText = $"{DateTime.Now.ToString(@"HH\:mm\:ss")} {text}";
+			string logText = $"{DateTime.Now:HH\\:mm\\:ss} {text}";
 			Debug.WriteLine(logText);
 
 			if (loggerTextbox.Text.Length + logText.Length >= loggerTextbox.MaxLength)
 			{
-				loggerTextbox.Text = $"{logText}";
+				loggerTextbox.Text = $@"{logText}";
 			}
 			else
 			{
@@ -413,15 +497,25 @@ namespace JudgeScores
 				{
 					AssignButton(button: b,
 						message: $"Кнопка <{GetButtonName(b)}> назначена на старт таймера",
-						assignAction: btn =>
+						assignAction: (btn) =>
 						{
-							AssignFunctionalButton(b, MainActionsType.StartTimer);
+							AssignFunctionalButton(b, MainActionTypes.StartTimer);
 							startTimerButton.Text = GetButtonName(b);
 						});
-				}, GamepadSource.Any);
+				},
+				(b) =>
+			{
+				AssignButton(button: b,
+					message: $"Кнопка <{b}> назначена на старт таймера",
+					assignAction: (btn) =>
+					{
+						AssignFunctionalButton(b, MainActionTypes.StartTimer);
+						startTimerButton.Text =$"{b}";
+					});
+			}, new[] { InputButtonSource.Any });
 		}
 
-		private void PlaySoundForAction(MainActionsType actionType)
+		private void PlaySoundForAction(MainActionTypes actionType)
 		{
 			if (_funcButtonsSounds.TryGetValue(actionType, out string fileName))
 			{
@@ -432,7 +526,7 @@ namespace JudgeScores
 			}
 		}
 
-		private void assignStop_Click(object sender, EventArgs e)
+		/*private void assignStop_Click(object sender, EventArgs e)
 		{
 				AddButtonAssignment((b) =>
 				{
@@ -440,11 +534,22 @@ namespace JudgeScores
 						message: $"Кнопка <{GetButtonName(b)}> назначена на паузу таймера",
 						assignAction: btn =>
 						{
-							AssignFunctionalButton(b, MainActionsType.StopTimer);
+							AssignFunctionalButton(b, MainActionTypes.StopTimer);
 							stopTimerButton.Text = GetButtonName(b);
 						});
-				}, GamepadSource.Any);
-		}
+				}, 
+					(b) =>
+					{
+						AssignButton(button: b,
+							message: $"Кнопка <{b}> назначена на паузу таймера",
+							assignAction: btn =>
+							{
+								AssignFunctionalButton(b, MainActionTypes.StopTimer);
+								stopTimerButton.Text = $"{b}";
+							});
+					},
+					new[] { InputButtonSource.Any });
+		}*/
 
 		private static string GetButtonName(GamepadButtons arg)
 		{
@@ -457,16 +562,23 @@ namespace JudgeScores
 			return buttonName;
 		}
 
-		private void AssignFunctionalButton(GamepadButtons arg, MainActionsType actionType)
+		private void AssignFunctionalButton(GamepadButtons button, MainActionTypes actionType)
 		{
-			if(_funcButtonsBinds.ContainsKey(arg))
+			_commonActionsProcessor.AddAction(button, actionType);
+			
+			/*if(_funcButtonsBinds.ContainsKey(arg))
 			{
 				_funcButtonsBinds[arg] = actionType;
 			}
 			else
 			{
 				_funcButtonsBinds.Add(arg, actionType);
-			}
+			}*/
+		}
+		
+		private void AssignFunctionalButton(Keys key, MainActionTypes actionType)
+		{
+			_commonActionsProcessor.AddAction(key, actionType);
 		}
 
 		private void SetTimer_Click(object sender, EventArgs e)
@@ -487,57 +599,97 @@ namespace JudgeScores
 					message: $"Кнопка <{GetButtonName(arg)}> назначена на сброс таймера",
 					assignAction: btn =>
 					{
-						AssignFunctionalButton(arg, MainActionsType.ResetTimer);
+						AssignFunctionalButton(arg, MainActionTypes.ResetTimer);
 						resetTimerButton.Text = GetButtonName(arg);
 					}
 				);
-			}, GamepadSource.Any);
+			},
+				(arg) => {
+				AssignButton(button: arg,
+					message: $"Кнопка <{arg}> назначена на сброс таймера",
+					assignAction: btn =>
+					{
+						AssignFunctionalButton(arg, MainActionTypes.ResetTimer);
+						resetTimerButton.Text = $"{arg}";
+					}
+				);
+			}, new[]{ InputButtonSource.Any });
 		}
 
-		private void AddButtonAssignmentPlayer(GamepadSource source, Player player, ScoresRange scoresRange, Label buttonLabel, Func<GamepadButtons, string> messageAction)
+		private void AddButtonAssignmentPlayer(InputButtonSource[] sources, ActionProcessor processor, MainActionTypes actionType, Label buttonLabel, 
+			Func<GamepadButtons, string> messageActionGamepad, Func<Keys, string> messageActionKeyboard)
 		{
 			AddButtonAssignment((arg) =>
 			{
 				AssignButton(button: arg,
-					message: messageAction(arg),
+					message: messageActionGamepad(arg),
 					assignAction: btn =>
 					{
-						player.AddScoresKeyBinding(scoresRange, arg);
+						processor.AddAction(arg, actionType);
 						buttonLabel.Text = GetButtonName(arg);
 					});
-			}, source);
+			},
+			(arg) =>
+			{
+				AssignButton(button: arg,
+					message: messageActionKeyboard(arg),
+					assignAction: btn =>
+					{
+						processor.AddAction(arg, actionType);
+						buttonLabel.Text = $"{arg}";
+					});
+			}, sources);
 		}
 
 		private void firstPlayerOneValue_Click(object sender, EventArgs e)
 		{
-			AddButtonAssignmentPlayer(GamepadSource.First, _firstPlayer, ScoresRange.First, button1Name1st, (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +1 балл для первого участника");
+			AddButtonAssignmentPlayer(new[] { InputButtonSource.First, InputButtonSource.Keyboard }, _firstPlayerActionsProcessor, MainActionTypes.PlayerHit1Level, button1Name1st,
+				(arg) => $"Кнопка <{GetButtonName(arg)}> назначена +1 балл для первого участника", (arg) => $"Кнопка <{arg}> назначена +1 балл для первого участника");
 		}
 
 		private void firstPlayerTwoValue_Click(object sender, EventArgs e)
 		{
-			AddButtonAssignmentPlayer(GamepadSource.First, _firstPlayer, ScoresRange.Second, button2Name1st, (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +2 балла для первого участника");
+			AddButtonAssignmentPlayer(new[] { InputButtonSource.First, InputButtonSource.Keyboard }, _firstPlayerActionsProcessor, MainActionTypes.PlayerHit2Level, button2Name1st, 
+				(arg) => $"Кнопка <{GetButtonName(arg)}> назначена +2 балла для первого участника", (arg) => $"Кнопка <{arg}> назначена +2 балла для первого участника");
 		}
 
 		private void firstPlayerThreeValue_Click(object sender, EventArgs e)
 		{
-			AddButtonAssignmentPlayer(GamepadSource.First, _firstPlayer, ScoresRange.Third, button3Name1st, (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +3 балла для первого участника");
+			AddButtonAssignmentPlayer(new[] { InputButtonSource.First, InputButtonSource.Keyboard }, _firstPlayerActionsProcessor, MainActionTypes.PlayerHit3Level, button3Name1st, 
+				(arg) => $"Кнопка <{GetButtonName(arg)}> назначена +3 балла для первого участника", (arg) => $"Кнопка <{arg}> назначена +3 балла для первого участника");
 		}
 
-		private void AddButtonAssignment(Action<GamepadButtons> action, GamepadSource source)
+		private void AddButtonAssignment(Action<GamepadButtons> gamepadAction, Action<Keys> keyboardAction, InputButtonSource[] sources)
 		{
-			if (_additionalActions.Count(e => e.Source != source) > 0)
-				return;
-
-			if (_additionalActions.Count(e => e.Source == source) > 0)
+			GamepadAction action = null;
+			
+			if (_additionalActions.TryPeek(out action))
 			{
-				_additionalActions.TryPop(out var act);
-				return;
+				if (action.Sources.Except(sources).Count() < action.Sources.Count())
+				{
+					_additionalActions.TryPop(out var act);
+					_additionalActions.Push(new GamepadAction
+					{
+						Gamepad = gamepadAction ?? action.Gamepad, 
+						Keyboard = keyboardAction ?? action.Keyboard, 
+						Sources = action.Sources.Intersect(sources).ToArray()
+					});
+				}
+				else
+				{
+					return;
+				}
 			}
 
-			_additionalActions.Push(new GamepadAction { Action = action, Source = source });
+			_additionalActions.Push(new GamepadAction
+			{
+				Gamepad = gamepadAction, 
+				Keyboard = keyboardAction, 
+				Sources = sources
+			});
 		}
 
-		private void AssignButton(GamepadButtons button, string message, Action<GamepadButtons> assignAction, bool isShowDialog = true)
+		/*private void AssignButton(GamepadButtons button, string message, Action<GamepadButtons> gamepadAssign, bool isShowDialog = true)
 		{
 			if(_funcButtonsBinds.ContainsKey(button) && isShowDialog)
 			{
@@ -551,25 +703,107 @@ namespace JudgeScores
 				_funcButtonsBinds.Remove(button);
 			}
 
+			gamepadAssign(button);
+
+			SettingsInfo(message);
+			Log(message);
+		}*/
+		
+		private void AssignButton(Keys button, string message, Action<Keys> assignAction, bool isShowDialog = true)
+		{
+			if(isShowDialog)
+			{
+				ActionProcessor currentProcessor = null;
+				
+				if (_commonActionsProcessor.Contains(button))
+				{
+					currentProcessor = _commonActionsProcessor;
+				}
+				
+				if (_firstPlayerActionsProcessor.Contains(button))
+				{
+					currentProcessor = _firstPlayerActionsProcessor;
+				}
+				
+				if (_secondPlayerActionsProcessor.Contains(button))
+				{
+					currentProcessor = _secondPlayerActionsProcessor;
+				}
+
+				if (currentProcessor != null)
+				{
+					DialogResult response = MessageBox.Show($"Кнопка <{button}> уже используется. Переназначить?", "Переназначение кнопок", MessageBoxButtons.YesNo);
+
+					if(response != DialogResult.Yes)
+					{
+						return;
+					}
+
+					currentProcessor.Remove(button);
+				}
+			}
+
 			assignAction(button);
 
 			SettingsInfo(message);
 			Log(message);
 		}
+		
+		private void AssignButton(GamepadButtons button, string message, Action<GamepadButtons> assignAction, bool isShowDialog = true)
+		{
+			if(isShowDialog)
+			{
+				ActionProcessor currentProcessor = null;
+				
+				if (_commonActionsProcessor.Contains(button))
+				{
+					currentProcessor = _commonActionsProcessor;
+				}
+				
+				if (_firstPlayerActionsProcessor.Contains(button))
+				{
+					currentProcessor = _firstPlayerActionsProcessor;
+				}
+				
+				if (_secondPlayerActionsProcessor.Contains(button))
+				{
+					currentProcessor = _secondPlayerActionsProcessor;
+				}
 
+				if (currentProcessor != null)
+				{
+					DialogResult response = MessageBox.Show($"Кнопка <{GetButtonName(button)}> уже используется. Переназначить?", "Переназначение кнопок", MessageBoxButtons.YesNo);
+
+					if(response != DialogResult.Yes)
+					{
+						return;
+					}
+
+					currentProcessor.Remove(button);
+				}
+			}
+
+			assignAction(button);
+
+			SettingsInfo(message);
+			Log(message);
+		}
 		private void secondPlayerOneValue_Click(object sender, EventArgs e)
 		{
-			AddButtonAssignmentPlayer(GamepadSource.First, _secondPlayer, ScoresRange.First, button1Name2nd, (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +1 балл для второго участника");
+			AddButtonAssignmentPlayer(new[] { InputButtonSource.Second, InputButtonSource.Keyboard }, _secondPlayerActionsProcessor, MainActionTypes.PlayerHit1Level, button1Name2nd,
+				(arg) => $"Кнопка <{GetButtonName(arg)}> назначена +1 балл для второго участника", (arg) => $"Кнопка <{arg}> назначена +1 балл для второго участника");
 		}
 
 		private void secondPlayerTwoValue_Click(object sender, EventArgs e)
 		{
-			AddButtonAssignmentPlayer(GamepadSource.First, _secondPlayer, ScoresRange.Second, button2Name2nd, (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +2 балла для второго участника");
+			AddButtonAssignmentPlayer(new[] { InputButtonSource.Second, InputButtonSource.Keyboard }, _secondPlayerActionsProcessor, MainActionTypes.PlayerHit2Level, button2Name2nd, 
+				(arg) => $"Кнопка <{GetButtonName(arg)}> назначена +2 балла для второго участника", (arg) => $"Кнопка <{arg}> назначена +2 балла для второго участника");
 		}
 
 		private void secondPlayerThreeValue_Click(object sender, EventArgs e)
 		{
-			AddButtonAssignmentPlayer(GamepadSource.First, _secondPlayer, ScoresRange.Third, button3Name2nd, (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +3 балла для второго участника");
+			AddButtonAssignmentPlayer(new[] { InputButtonSource.Second, InputButtonSource.Keyboard }, _secondPlayerActionsProcessor, MainActionTypes.PlayerHit3Level, button3Name2nd, 
+				(arg) => $"Кнопка <{GetButtonName(arg)}> назначена +3 балла для второго участника", (arg) => $"Кнопка <{arg}> назначена +3 балла для второго участника");
 		}
 
 		private void AddSoundForPlayer(Player player, ScoresRange scoresRange)
@@ -583,7 +817,7 @@ namespace JudgeScores
 			}
 		}
 
-		private string AddMainSound(MainActionsType button)
+		private string AddMainSound(MainActionTypes button)
 		{
 			openFileDialog.Filter = "Mp3|*.mp3|Wav|*.wav";
 			openFileDialog.CheckFileExists = true;
@@ -638,17 +872,17 @@ namespace JudgeScores
 
 		private void setSoundStart_Click(object sender, EventArgs e)
 		{
-			AddMainSound(MainActionsType.StartTimer);
+			AddMainSound(MainActionTypes.StartTimer);
 		}
 
 		private void setSoundStop_Click(object sender, EventArgs e)
 		{
-			AddMainSound(MainActionsType.StopTimer);
+			AddMainSound(MainActionTypes.StopTimer);
 		}
 
 		private void setSoundReset_Click(object sender, EventArgs e)
 		{
-			AddMainSound(MainActionsType.ResetTimer);
+			AddMainSound(MainActionTypes.ResetTimer);
 		}
 
 		private void ScoresForm_SizeChanged(object sender, EventArgs e)
@@ -676,25 +910,25 @@ namespace JudgeScores
 			secondPlayerScores.Height = JudgesDashboard.Height - 32;
 			countdownTimer.Height = (int)(firstPlayerScores.Height / 6.5);
 
-			secondPlayerScores.Location = new System.Drawing.Point(firstPlayerScores.Width + firstPlayerScores.Location.X, secondPlayerScores.Location.Y);
+			secondPlayerScores.Location = new Point(firstPlayerScores.Width + firstPlayerScores.Location.X, secondPlayerScores.Location.Y);
 
 			float fontSize = Math.Max(firstPlayerScores.Width * firstPlayerScores.Height / ((514 * 362) / 150F)*fontScale, 14F);
 
-			firstPlayerScores.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			secondPlayerScores.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-			countdownTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", fontSize * 0.3F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			firstPlayerScores.Font = new Font("Microsoft Sans Serif", fontSize, FontStyle.Bold,GraphicsUnit.Point, ((byte)(204)));
+			secondPlayerScores.Font = new Font("Microsoft Sans Serif", fontSize, FontStyle.Bold, GraphicsUnit.Point, ((byte)(204)));
+			countdownTimer.Font = new Font("Microsoft Sans Serif", fontSize * 0.3F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(204)));
 
-			countdownTimer.Location = new System.Drawing.Point(firstPlayerScores.Width + firstPlayerScores.Location.X - countdownTimer.Width / 2, countdownTimer.Location.Y);
+			countdownTimer.Location = new Point(firstPlayerScores.Width + firstPlayerScores.Location.X - countdownTimer.Width / 2, countdownTimer.Location.Y);
 		}
 
 		private void setRoundRemainSound_Click(object sender, EventArgs e)
 		{
-			AddMainSound(MainActionsType.RoundRemain10Seconds);
+			AddMainSound(MainActionTypes.RoundRemain10Seconds);
 		}
 
 		private void setRoundEndSound_Click(object sender, EventArgs e)
 		{
-			AddMainSound(MainActionsType.RoundComplete);
+			AddMainSound(MainActionTypes.RoundComplete);
 		}
 
 		private void SaveSettings(string fileName)
@@ -712,9 +946,9 @@ namespace JudgeScores
 					JsonSettings bindings = new JsonSettings
 					{
 						MainFunctionSounds = _funcButtonsSounds,
-						MainFunctionBinds = _funcButtonsBinds,
-						FirstPlayerBinds = _firstPlayer.KeyBindings,
-						SecondPlayerBinds = _secondPlayer.KeyBindings,
+						MainFunctionBinds = _commonActionsProcessor.GetActionsBinds(),
+						FirstPlayerBinds = _firstPlayerActionsProcessor.GetActionsBinds(),
+						SecondPlayerBinds = _secondPlayerActionsProcessor.GetActionsBinds(),
 						FirstPlayerSounds = _firstPlayer.SoundBindings,
 						SecondPlayerSounds = _secondPlayer.SoundBindings,
 						RoundSeconds = _dashboardSettings.RoundSeconds,
@@ -788,82 +1022,90 @@ namespace JudgeScores
 
 					foreach (var bind in settings.MainFunctionBinds)
 					{
-						AssignFunctionalButton(bind.Key, bind.Value);
-
-						switch (bind.Value)
+						if(bind.Value.Key.HasValue)
+							_commonActionsProcessor.AddAction(bind.Value.Key.Value, bind.Key);
+						
+						if(bind.Value.Button.HasValue)
+							_commonActionsProcessor.AddAction(bind.Value.Button.Value, bind.Key);
+						
+						switch (bind.Key)
 						{
-							case MainActionsType.ResetTimer:
-								resetTimerButton.Text = GetButtonName(bind.Key);
+							case MainActionTypes.ResetTimer:
+								resetTimerButton.Text = bind.Value?.Button != null ? GetButtonName(bind.Value.Button.Value): $"{bind.Value?.Key}";
 								break;
-							case MainActionsType.StartTimer:
-								startTimerButton.Text = GetButtonName(bind.Key);
+							case MainActionTypes.StartTimer:
+								startTimerButton.Text = bind.Value?.Button != null ? GetButtonName(bind.Value.Button.Value): $"{bind.Value?.Key}";
 								break;
-							case MainActionsType.StopTimer:
-								stopTimerButton.Text = GetButtonName(bind.Key);
-								break;
-							default:
-								break;
+							/*case MainActionTypes.StopTimer:
+								stopTimerButton.Text =  bind.Value?.Button != null ? GetButtonName(bind.Value.Button.Value): $"{bind.Value?.Key}";
+								break;*/
 						}
 					}
 
-					Dictionary<ScoresRange, ScoresBinds> firstPlayerBinds = new Dictionary<ScoresRange, ScoresBinds>
+					Dictionary<MainActionTypes, ScoresBinds> firstPlayerBinds = new Dictionary<MainActionTypes, ScoresBinds>
 					{
 						{
-							ScoresRange.First,
+							MainActionTypes.PlayerHit1Level,
 							new ScoresBinds
 							{
 								Label = button1Name1st,
-								MessageFunc = new Func<GamepadButtons, string>((arg) => $"Кнопка <{GetButtonName(arg)}> назначена +1 балл для первого участника"),
+								MessageFuncStr = (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +1 балл для первого участника",
+								MessageFuncChar =(arg) => $"Кнопка <{arg}> назначена +1 балл для первого участника",
 							}
 						},
 						{
-							ScoresRange.Second,
+							MainActionTypes.PlayerHit2Level,
 							new ScoresBinds
 							{
 								Label = button2Name1st,
-								MessageFunc = new Func<GamepadButtons, string>((arg) => $"Кнопка <{GetButtonName(arg)}> назначена +2 балла для первого участника"),
+								MessageFuncStr = (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +2 балла для первого участника",
+								MessageFuncChar = (arg) => $"Кнопка <{arg}> назначена +2 балла для первого участника",
 							}
 						},
 						{
-							ScoresRange.Third,
+							MainActionTypes.PlayerHit3Level,
 							new ScoresBinds
 							{
 								Label = button3Name1st,
-								MessageFunc = new Func<GamepadButtons, string>((arg) => $"Кнопка <{GetButtonName(arg)}> назначена +3 балла для первого участника"),
+								MessageFuncStr = (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +3 балла для первого участника",
+								MessageFuncChar = (arg) => $"Кнопка <{arg}> назначена +3 балла для первого участника",
 							}
 						}
 					};
 
-					Dictionary<ScoresRange, ScoresBinds> secondPlayerBinds = new Dictionary<ScoresRange, ScoresBinds>
+					Dictionary<MainActionTypes, ScoresBinds> secondPlayerBinds = new Dictionary<MainActionTypes, ScoresBinds>
 					{
 						{
-							ScoresRange.First,
+							MainActionTypes.PlayerHit1Level,
 							new ScoresBinds
 							{
 								Label = button1Name2nd,
-								MessageFunc = new Func<GamepadButtons, string>((arg) => $"Кнопка <{GetButtonName(arg)}> назначена +1 балл для второго участника"),
+								MessageFuncStr = (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +1 балл для второго участника",
+								MessageFuncChar = (arg) => $"Кнопка <{arg}> назначена +1 балл для второго участника",
 							}
 						},
 						{
-							ScoresRange.Second,
+							MainActionTypes.PlayerHit2Level,
 							new ScoresBinds
 							{
 								Label = button2Name2nd,
-								MessageFunc = new Func<GamepadButtons, string>((arg) => $"Кнопка <{GetButtonName(arg)}> назначена +2 балла для второго участника"),
+								MessageFuncStr = (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +2 балла для второго участника",
+								MessageFuncChar = (arg) => $"Кнопка <{arg}> назначена +2 балла для второго участника",
 							}
 						},
 						{
-							ScoresRange.Third,
+							MainActionTypes.PlayerHit3Level,
 							new ScoresBinds
 							{
 								Label = button3Name2nd,
-								MessageFunc = new Func<GamepadButtons, string>((arg) => $"Кнопка <{GetButtonName(arg)}> назначена +3 балла для второго участника"),
+								MessageFuncStr = (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +3 балла для второго участника",
+								MessageFuncChar = (arg) => $"Кнопка <{arg}> назначена +3 балла для второго участника",
 							}
 						}
 					};
 
-					AssignPlayerBindings(settings.FirstPlayerBinds, firstPlayerBinds, GamepadSource.First, _firstPlayer);
-					AssignPlayerBindings(settings.SecondPlayerBinds, secondPlayerBinds, GamepadSource.First, _secondPlayer);
+					AssignPlayerBindings(settings.FirstPlayerBinds, firstPlayerBinds, InputButtonSource.First, _firstPlayerActionsProcessor);
+					AssignPlayerBindings(settings.SecondPlayerBinds, secondPlayerBinds, InputButtonSource.First, _secondPlayerActionsProcessor);
 					AssignPlayerSounds(settings.FirstPlayerSounds, _firstPlayer);
 					AssignPlayerSounds(settings.SecondPlayerSounds, _secondPlayer);
 					AssignPlayerHitsMap(settings.FirstPlayerHitsBinds, _firstPlayer,
@@ -919,21 +1161,42 @@ namespace JudgeScores
 				}
 			}
 		}
-
-		private void AssignPlayerBindings(Dictionary<GamepadButtons, ScoresRange> buttonBindings, Dictionary<ScoresRange, ScoresBinds> playerBinds, GamepadSource gamepadSource, Player player)
+		
+		private void AssignPlayerBindings(Dictionary<MainActionTypes, ButtonConfig> buttonBindings, Dictionary<MainActionTypes, ScoresBinds> playerBinds, InputButtonSource inputButtonSource,
+			ActionProcessor playerProcessor)
 		{
+			if (buttonBindings == null)
+				return;
+			
 			foreach (var playerBind in buttonBindings)
 			{
-				if (playerBinds.TryGetValue(playerBind.Value, out ScoresBinds scoresBinds))
+				if (playerBinds.TryGetValue(playerBind.Key, out ScoresBinds scoresBinds))
 				{
-					AssignButton(button: playerBind.Key,
-					message: scoresBinds.MessageFunc(playerBind.Key),
-					assignAction: btn =>
+					if (playerBind.Value.Button.HasValue)
 					{
-						player.AddScoresKeyBinding(playerBind.Value, playerBind.Key);
-						if(scoresBinds.Label != null)
-							scoresBinds.Label.Text = GetButtonName(playerBind.Key);
-					});
+						AssignButton(playerBind.Value.Button.Value,
+							scoresBinds.MessageFuncStr(playerBind.Value.Button.Value),
+							btn =>
+							{
+								playerProcessor.AddAction(playerBind.Value.Button.Value, playerBind.Key);
+								if (scoresBinds.Label != null)
+									scoresBinds.Label.Text = GetButtonName(playerBind.Value.Button.Value);
+							}, 
+							false);
+					}
+					
+					if (playerBind.Value.Key.HasValue)
+					{
+						AssignButton(playerBind.Value.Key.Value,
+							scoresBinds.MessageFuncChar(playerBind.Value.Key.Value),
+							btn =>
+							{
+								playerProcessor.AddAction(playerBind.Value.Key.Value, playerBind.Key);
+								if (scoresBinds.Label != null)
+									scoresBinds.Label.Text = $@"{playerBind.Value.Key.Value}";
+							}, 
+							false);
+					}
 				}
 			}
 		}
@@ -972,7 +1235,7 @@ namespace JudgeScores
 
 		private void setPauseRemainSound_Click(object sender, EventArgs e)
 		{
-			AddMainSound(MainActionsType.PauseRoundRemain10Seconds);
+			AddMainSound(MainActionTypes.PauseRoundRemain10Seconds);
 		}
 
 		private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -998,11 +1261,11 @@ namespace JudgeScores
 		private static void UpdateTextButtonLabels(ushort amount, Button hitsButton, Label hitsLabel, Button soundButton)
 		{
 			if(hitsButton != null)
-				hitsButton.Text = $"+{amount} балл(а)";
+				hitsButton.Text = $@"+{amount} балл(а)";
 			if(hitsLabel != null )
-				hitsLabel.Text = $"Кнопка +{amount}";
+				hitsLabel.Text = $@"Кнопка +{amount}";
 			if(soundButton != null)
-				soundButton.Text = $"Звук <+{amount}>";
+				soundButton.Text = $@"Звук <+{amount}>";
 		}
 
 		private void player1Scores1_ValueChanged(object sender, EventArgs e)
@@ -1043,7 +1306,7 @@ namespace JudgeScores
 
 		private void loadSettings_Click(object sender, EventArgs e)
 		{
-			openFileDialog.Filter = "Json-config|*.json";
+			openFileDialog.Filter = @"Json-config|*.json";
 			openFileDialog.CheckFileExists = true;
 			if(openFileDialog.ShowDialog() == DialogResult.OK)
 			{
@@ -1055,7 +1318,7 @@ namespace JudgeScores
 
 		private void saveSettings_Click(object sender, EventArgs e)
 		{
-			openFileDialog.Filter = "Json-config|*.json";
+			openFileDialog.Filter = @"Json-config|*.json";
 			openFileDialog.CheckFileExists = false;
 			if(openFileDialog.ShowDialog() == DialogResult.OK)
 			{
@@ -1110,7 +1373,7 @@ namespace JudgeScores
 
 		private void rnd1SetSound_Click(object sender, EventArgs e)
 		{
-			_dashboardSettings.RandomTimer1.FilePath = AddMainSound(MainActionsType.RandomTimer1);
+			_dashboardSettings.RandomTimer1.FilePath = AddMainSound(MainActionTypes.RandomTimer1);
 		}
 
 		private void rnd2IsEnable_CheckedChanged(object sender, EventArgs e)
@@ -1145,5 +1408,6 @@ namespace JudgeScores
 				_dashboardSettings.RandomTimer2.FilePath = folderBrowserDialog.SelectedPath;
 			}
 		}
+		
 	}
 }
