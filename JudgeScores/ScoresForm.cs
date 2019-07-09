@@ -253,7 +253,9 @@ namespace JudgeScores
 		{
 			var config = new MapperConfiguration(cfg => {
 				cfg.CreateMap<RandomTimerSettingsJson, RandomTimerSettings>();
-				cfg.CreateMap<RandomTimerSettings, RandomTimerSettingsJson>();
+				cfg.CreateMap<RandomTimerSettings, RandomTimerSettingsJson>()
+					.ForMember(s => s.LowerLimit, p => p.MapFrom(s => Math.Max(1, Math.Min(59, s.LowerLimit))))
+					.ForMember(s => s.UpperLimit, p => p.MapFrom(s => Math.Max(1, Math.Min(59, s.UpperLimit))));
 			});
 
 			_objectMapper = config.CreateMapper();
@@ -1130,10 +1132,11 @@ namespace JudgeScores
 			timer.Stop();
 			Random rnd = new Random(DateTime.Now.Second);
 			int min = Math.Min(lowerLimit, upperLimit);
-			int max = Math.Min(lowerLimit, upperLimit);
+			int max = Math.Max(lowerLimit, upperLimit);
 			int randomValue = rnd.Next(min, max);
 
-			timer.Interval = randomValue * 1000;
+			if(randomValue > 0)
+				timer.Interval = randomValue * 1000;
 			timer.Start();
 		}
 
