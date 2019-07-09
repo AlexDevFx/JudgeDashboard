@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionHandler.cs" />
+    <Compile Include="ActionHistory.cs" />
     <Compile Include="ActionProcessor.cs" />
     <Compile Include="ActionsProvider.cs" />
     <Compile Include="DashboardSettings.cs">
