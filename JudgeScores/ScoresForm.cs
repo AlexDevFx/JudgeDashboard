@@ -90,6 +90,12 @@ namespace JudgeScores
 					_lastAction.Player = _firstPlayer;
 					_lastAction.HitsAmount = hitsAmount;
 				}
+				
+				if (hitsAmount == ushort.MaxValue)
+				{
+					_lastAction.Player = null;
+					_lastAction.HitsAmount = 0;
+				}
 			}, 
 			PlaySound);
 
@@ -101,6 +107,12 @@ namespace JudgeScores
 				{
 					_lastAction.Player = _secondPlayer;
 					_lastAction.HitsAmount = hitsAmount;
+				}
+
+				if (hitsAmount == ushort.MaxValue)
+				{
+					_lastAction.Player = null;
+					_lastAction.HitsAmount = 0;
 				}
 			},
 			PlaySound);
@@ -174,6 +186,10 @@ namespace JudgeScores
 
 					_firstPlayer.ResetScores();
 					_secondPlayer.ResetScores();
+					
+					_lastAction.Player = null;
+					_lastAction.HitsAmount = 0;
+					
 					PlaySoundForAction(MainActionTypes.ResetTimer);
 				});
 			
@@ -181,6 +197,8 @@ namespace JudgeScores
 				MainActionTypes.UndoAction,
 				() =>
 				{
+					if (IsRoundCompleted)
+						return;
 					if(_lastAction?.Player != null && _lastAction?.HitsAmount > 0)
 						_lastAction.Player.SubstrateHits(_lastAction.HitsAmount);
 					
@@ -848,6 +866,9 @@ namespace JudgeScores
 							case MainActionTypes.StartTimer:
 								startTimerButton.Text = $"{bind.Value?.Key}";
 								break;
+							case MainActionTypes.UndoAction:
+								undoActionButton.Text = $"{bind.Value?.Key}";
+								break;
 							/*case MainActionTypes.StopTimer:
 								stopTimerButton.Text =  bind.Value?.Button != null ? GetButtonName(bind.Value.Button.Value): $"{bind.Value?.Key}";
 								break;*/
@@ -1208,26 +1229,16 @@ namespace JudgeScores
 			AddMainSound(MainActionTypes.UndoAction);
 		}
 
-		private void undoAction_Click(object sender, EventArgs e)
+		private void undoAction_Click_1(object sender, EventArgs e)
 		{
-			AddButtonAssignment((arg) =>
-				{
-					AssignButton(button: arg,
-						message: $"Кнопка <{GetButtonName(arg)}> назначена на сброс таймера",
-						assignAction: btn =>
-						{
-							AssignFunctionalButton(arg, MainActionTypes.UndoAction);
-							resetTimerButton.Text = GetButtonName(arg);
-						}
-					);
-				},
+			AddButtonAssignment(
 				(arg) => {
 					AssignButton(button: arg,
-						message: $"Кнопка <{arg}> назначена на сброс таймера",
+						message: $"Кнопка <{arg}> назначена на отмену",
 						assignAction: btn =>
 						{
 							AssignFunctionalButton(arg, MainActionTypes.UndoAction);
-							resetTimerButton.Text = $"{arg}";
+							undoActionButton.Text = $"{arg}";
 						}
 					);
 				}, new[]{ InputButtonSource.Any });

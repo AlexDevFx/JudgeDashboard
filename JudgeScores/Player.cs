@@ -85,7 +85,8 @@ namespace JudgeScores
 
 		public void SubstrateHits(ushort hitsAmount)
 		{
-			Scores -= hitsAmount;
+			Scores = (ushort)Math.Max(Scores - hitsAmount, 0);
+			_setHitAction?.Invoke(ushort.MaxValue);
 		}
 	}
 }

@@ -50,7 +50,7 @@
 			this.rnd1IsEnable = new System.Windows.Forms.CheckBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.setUndoSound = new System.Windows.Forms.Button();
-			this.label8 = new System.Windows.Forms.Label();
+			this.undoActionButton = new System.Windows.Forms.Label();
 			this.undoAction = new System.Windows.Forms.Button();
 			this.assignStartButton = new System.Windows.Forms.Button();
 			this.resetTimer = new System.Windows.Forms.Button();
@@ -354,7 +354,7 @@
 			this.rnd1IsEnable.UseVisualStyleBackColor = true;
 			this.rnd1IsEnable.CheckedChanged += new System.EventHandler(this.rnd1IsEnable_CheckedChanged);
 			this.groupBox3.Controls.Add(this.setUndoSound);
-			this.groupBox3.Controls.Add(this.label8);
+			this.groupBox3.Controls.Add(this.undoActionButton);
 			this.groupBox3.Controls.Add(this.undoAction);
 			this.groupBox3.Controls.Add(this.assignStartButton);
 			this.groupBox3.Controls.Add(this.resetTimer);
@@ -384,15 +384,15 @@
 			this.setUndoSound.Text = "Звук <Отмена>";
 			this.setUndoSound.UseVisualStyleBackColor = true;
 			this.setUndoSound.Click += new System.EventHandler(this.setUndoSound_Click);
-			this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
-				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
-			this.label8.Location = new System.Drawing.Point(170, 123);
-			this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(156, 29);
-			this.label8.TabIndex = 42;
-			this.label8.Text = "Кнопка <Отмена>";
-			this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.undoActionButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
+				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+			this.undoActionButton.Location = new System.Drawing.Point(170, 123);
+			this.undoActionButton.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.undoActionButton.Name = "undoActionButton";
+			this.undoActionButton.Size = new System.Drawing.Size(156, 29);
+			this.undoActionButton.TabIndex = 42;
+			this.undoActionButton.Text = "Кнопка <Отмена>";
+			this.undoActionButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			this.undoAction.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
 				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.undoAction.Location = new System.Drawing.Point(7, 123);
@@ -402,6 +402,7 @@
 			this.undoAction.TabIndex = 41;
 			this.undoAction.Text = "Отмена";
 			this.undoAction.UseVisualStyleBackColor = true;
+			this.undoAction.Click += new System.EventHandler(this.undoAction_Click_1);
 			this.assignStartButton.Font =
 				new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
 			this.assignStartButton.Location = new System.Drawing.Point(7, 22);
@@ -1037,7 +1038,7 @@
 		private System.Windows.Forms.CheckBox rnd1IsEnable;
 		private System.Windows.Forms.GroupBox groupBox3;
 		private System.Windows.Forms.Button setRoundRemainSound;
-		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label undoActionButton;
 		private System.Windows.Forms.Button undoAction;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
 	}
