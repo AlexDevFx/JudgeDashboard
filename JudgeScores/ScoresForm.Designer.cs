@@ -49,6 +49,9 @@
 			this.rnd1UpperLimit = new System.Windows.Forms.NumericUpDown();
 			this.rnd1IsEnable = new System.Windows.Forms.CheckBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.setUndoSound = new System.Windows.Forms.Button();
+			this.label8 = new System.Windows.Forms.Label();
+			this.undoAction = new System.Windows.Forms.Button();
 			this.assignStartButton = new System.Windows.Forms.Button();
 			this.resetTimer = new System.Windows.Forms.Button();
 			this.startTimerButton = new System.Windows.Forms.Label();
@@ -350,6 +353,9 @@
 			this.rnd1IsEnable.Text = "Активировать/Отключить";
 			this.rnd1IsEnable.UseVisualStyleBackColor = true;
 			this.rnd1IsEnable.CheckedChanged += new System.EventHandler(this.rnd1IsEnable_CheckedChanged);
+			this.groupBox3.Controls.Add(this.setUndoSound);
+			this.groupBox3.Controls.Add(this.label8);
+			this.groupBox3.Controls.Add(this.undoAction);
 			this.groupBox3.Controls.Add(this.assignStartButton);
 			this.groupBox3.Controls.Add(this.resetTimer);
 			this.groupBox3.Controls.Add(this.startTimerButton);
@@ -364,10 +370,38 @@
 			this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.groupBox3.Name = "groupBox3";
 			this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.groupBox3.Size = new System.Drawing.Size(628, 195);
+			this.groupBox3.Size = new System.Drawing.Size(611, 228);
 			this.groupBox3.TabIndex = 49;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Раунд";
+			this.setUndoSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
+				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+			this.setUndoSound.Location = new System.Drawing.Point(370, 123);
+			this.setUndoSound.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.setUndoSound.Name = "setUndoSound";
+			this.setUndoSound.Size = new System.Drawing.Size(144, 27);
+			this.setUndoSound.TabIndex = 43;
+			this.setUndoSound.Text = "Звук <Отмена>";
+			this.setUndoSound.UseVisualStyleBackColor = true;
+			this.setUndoSound.Click += new System.EventHandler(this.setUndoSound_Click);
+			this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
+				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+			this.label8.Location = new System.Drawing.Point(170, 123);
+			this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(156, 29);
+			this.label8.TabIndex = 42;
+			this.label8.Text = "Кнопка <Отмена>";
+			this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.undoAction.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
+				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+			this.undoAction.Location = new System.Drawing.Point(7, 123);
+			this.undoAction.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.undoAction.Name = "undoAction";
+			this.undoAction.Size = new System.Drawing.Size(155, 27);
+			this.undoAction.TabIndex = 41;
+			this.undoAction.Text = "Отмена";
+			this.undoAction.UseVisualStyleBackColor = true;
 			this.assignStartButton.Font =
 				new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
 			this.assignStartButton.Location = new System.Drawing.Point(7, 22);
@@ -438,7 +472,7 @@
 			this.setSoundReset.Click += new System.EventHandler(this.setSoundReset_Click);
 			this.setRoundEndSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
-			this.setRoundEndSound.Location = new System.Drawing.Point(424, 134);
+			this.setRoundEndSound.Location = new System.Drawing.Point(8, 167);
 			this.setRoundEndSound.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.setRoundEndSound.Name = "setRoundEndSound";
 			this.setRoundEndSound.Size = new System.Drawing.Size(191, 47);
@@ -448,7 +482,7 @@
 			this.setRoundEndSound.Click += new System.EventHandler(this.setRoundEndSound_Click);
 			this.setPauseRemainSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
-			this.setPauseRemainSound.Location = new System.Drawing.Point(225, 135);
+			this.setPauseRemainSound.Location = new System.Drawing.Point(206, 168);
 			this.setPauseRemainSound.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.setPauseRemainSound.Name = "setPauseRemainSound";
 			this.setPauseRemainSound.Size = new System.Drawing.Size(191, 46);
@@ -458,7 +492,7 @@
 			this.setPauseRemainSound.Click += new System.EventHandler(this.setPauseRemainSound_Click);
 			this.setRoundRemainSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
-			this.setRoundRemainSound.Location = new System.Drawing.Point(7, 135);
+			this.setRoundRemainSound.Location = new System.Drawing.Point(406, 168);
 			this.setRoundRemainSound.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.setRoundRemainSound.Name = "setRoundRemainSound";
 			this.setRoundRemainSound.Size = new System.Drawing.Size(191, 46);
@@ -929,6 +963,7 @@
 
 		#endregion
 
+		private System.Windows.Forms.Button setUndoSound;
 		private System.Windows.Forms.Label countdownTimer;
 		private System.Windows.Forms.TabControl JudgesDashboard;
 		private System.Windows.Forms.TabPage ScoresPage;
@@ -1002,6 +1037,8 @@
 		private System.Windows.Forms.CheckBox rnd1IsEnable;
 		private System.Windows.Forms.GroupBox groupBox3;
 		private System.Windows.Forms.Button setRoundRemainSound;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Button undoAction;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
 	}
 }

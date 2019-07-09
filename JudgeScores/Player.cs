@@ -24,10 +24,10 @@ namespace JudgeScores
 			{ ScoresRange.Third, 3 },
 		};
 		
-		private Action _setHitAction;
+		private Action<ushort> _setHitAction;
 		private Action<string> _soundAction;
 
-		public void Init(Action setHitAction, Action<string> soundAction)
+		public void Init(Action<ushort> setHitAction, Action<string> soundAction)
 		{
 			_setHitAction = setHitAction;
 			_soundAction = soundAction;
@@ -45,7 +45,7 @@ namespace JudgeScores
 			if (Scores + hitsAmount < short.MaxValue)
 				Scores += hitsAmount;
 
-			_setHitAction?.Invoke();
+			_setHitAction?.Invoke(hitsAmount);
 
 			if(SoundBindings.ContainsKey(KeyBindings[button]))
 			{
@@ -67,7 +67,7 @@ namespace JudgeScores
 			if (Scores + hitsAmount < short.MaxValue)
 				Scores += hitsAmount;
 
-			_setHitAction?.Invoke();
+			_setHitAction?.Invoke(hitsAmount);
 
 			if(SoundBindings.ContainsKey(range))
 			{
@@ -107,7 +107,7 @@ namespace JudgeScores
 		public void ResetScores()
 		{
 			Scores = 0;
-			_setHitAction?.Invoke();
+			_setHitAction?.Invoke(0);
 		}
 
 		public void AddSoundBinding(ScoresRange scoresRange, string fileName)
@@ -120,6 +120,11 @@ namespace JudgeScores
 			{
 				SoundBindings.Add(scoresRange, fileName);
 			}
+		}
+
+		public void SubstrateHits(ushort hitsAmount)
+		{
+			Scores -= hitsAmount;
 		}
 	}
 }
