@@ -65,6 +65,12 @@ namespace JudgeScores
             {
                 binds[button] = actionType;
             }
+            else if (binds.ContainsValue(actionType))
+            {
+                var bind = binds.FirstOrDefault(e => e.Value == actionType);
+                binds.Remove(bind.Key);
+                binds.Add(button, actionType);
+            }
             else
             {
                 binds.Add(button, actionType);
