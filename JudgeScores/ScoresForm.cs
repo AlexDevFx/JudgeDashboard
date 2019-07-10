@@ -1033,7 +1033,7 @@ namespace JudgeScores
 			foreach (var hit in hitsMap)
 			{
 				player.AddScoresHitsAmount(hit.Key, hit.Value);
-				UpdateTextButtonLabels(hit.Value, buttons[hit.Key], buttonLabel[hit.Key], soundButton[hit.Key]);
+				UpdateTextButtonLabels(hit.Value, buttons[hit.Key], soundButton[hit.Key]);
 
 				if ( numerics != null && numerics.TryGetValue(hit.Key, out NumericUpDown numericControl) )
 				{
@@ -1065,19 +1065,17 @@ namespace JudgeScores
 			_dashboardSettings.PauseSeconds = _pauseCountdownTime.TotalSeconds;
 		}
 
-		private void SetHitsAmount(Player player, ScoresRange range, ushort amount, Button hitsButton, Label hitsLabel,
+		private void SetHitsAmount(Player player, ScoresRange range, ushort amount, Button hitsButton,
 			Button soundButton)
 		{
 			player.AddScoresHitsAmount(range, amount);
-			UpdateTextButtonLabels(amount, hitsButton, hitsLabel, soundButton);
+			UpdateTextButtonLabels(amount, hitsButton, soundButton);
 		}
 
-		private static void UpdateTextButtonLabels(ushort amount, Button hitsButton, Label hitsLabel, Button soundButton)
+		private static void UpdateTextButtonLabels(ushort amount, Button hitsButton, Button soundButton)
 		{
 			if(hitsButton != null)
 				hitsButton.Text = $@"+{amount} балл(а)";
-			if(hitsLabel != null )
-				hitsLabel.Text = $@"Кнопка +{amount}";
 			if(soundButton != null)
 				soundButton.Text = $@"Звук <+{amount}>";
 		}
@@ -1085,37 +1083,37 @@ namespace JudgeScores
 		private void player1Scores1_ValueChanged(object sender, EventArgs e)
 		{
 			SetHitsAmount(_firstPlayer, ScoresRange.First, (ushort) player1Scores1.Value, firstPlayerOneValue,
-				button1Name1st, set1Sound1st);
+				set1Sound1st);
 		}
 
 		private void player1Scores2_ValueChanged(object sender, EventArgs e)
 		{
 			SetHitsAmount(_firstPlayer, ScoresRange.Second, (ushort) player1Scores2.Value, firstPlayerTwoValue,
-				button2Name1st, set2Sound1st);
+				set2Sound1st);
 		}
 
 		private void player1Scores3_ValueChanged(object sender, EventArgs e)
 		{
 			SetHitsAmount(_firstPlayer, ScoresRange.Third, (ushort) player1Scores3.Value, firstPlayerThreeValue,
-				button3Name1st, set3Sound1st);
+				set3Sound1st);
 		}
 
 		private void player2Scores1_ValueChanged(object sender, EventArgs e)
 		{
 			SetHitsAmount(_secondPlayer, ScoresRange.First, (ushort) player2Scores1.Value, secondPlayerOneValue,
-				button1Name2nd, set1Sound2nd);
+				set1Sound2nd);
 		}
 
 		private void player2Scores2_ValueChanged(object sender, EventArgs e)
 		{
 			SetHitsAmount(_secondPlayer, ScoresRange.Second, (ushort) player2Scores2.Value, secondPlayerTwoValue,
-				button2Name2nd, set2Sound2nd);
+				set2Sound2nd);
 		}
 
 		private void player2Scores3_ValueChanged(object sender, EventArgs e)
 		{
 			SetHitsAmount(_secondPlayer, ScoresRange.Third, (ushort) player2Scores3.Value, secondPlayerThreeValue,
-				button3Name2nd, set3Sound2nd);
+				set3Sound2nd);
 		}
 
 		private void loadSettings_Click(object sender, EventArgs e)
