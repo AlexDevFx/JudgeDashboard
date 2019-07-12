@@ -108,7 +108,7 @@ namespace JudgeScores
 					_lastAction.Player = _secondPlayer;
 					_lastAction.HitsAmount = hitsAmount;
 				}
-
+				
 				if (hitsAmount == ushort.MaxValue)
 				{
 					_lastAction.Player = null;
@@ -186,6 +186,7 @@ namespace JudgeScores
 
 					_firstPlayer.ResetScores();
 					_secondPlayer.ResetScores();
+					_dashboardSettings.RoundsCompleted = 0;
 					
 					_lastAction.Player = null;
 					_lastAction.HitsAmount = 0;
@@ -253,7 +254,7 @@ namespace JudgeScores
             	PlaySoundForAction(MainActionTypes.PauseRoundRemain10Seconds);
             }
 
-            if (_pauseCountdownTime.TotalSeconds <= 0)
+            if (_pauseCountdownTime.TotalSeconds < 0)
             {
             	_pauseRoundTimer.Stop();
                 if ( _dashboardSettings.RoundsCount - _dashboardSettings.RoundsCompleted > 0 )
@@ -288,16 +289,22 @@ namespace JudgeScores
 
 		private void MainRoundTimerTick(object sender, EventArgs e)
 		{
+			if (_dashboardSettings.RoundsCount - _dashboardSettings.RoundsCompleted <= 0)
+				return;
+			
 			_countdownTime = _countdownTime.Subtract(TimeSpan.FromSeconds(1));
 
-			countdownTimer.Text = _countdownTime.ToString(@"mm\:ss");
 
 			if (Math.Abs(_countdownTime.TotalSeconds - 10) < 1)
 			{
 				PlaySoundForAction(MainActionTypes.RoundRemain10Seconds);
 			}
 
-			if (_countdownTime.TotalSeconds <= 0)
+			if (_countdownTime.TotalSeconds >= 0)
+			{
+				countdownTimer.Text = _countdownTime.ToString(@"mm\:ss");
+			}
+			else
 			{
 				StopRound();
 				PlaySoundForAction(MainActionTypes.RoundComplete);
@@ -1055,6 +1062,7 @@ namespace JudgeScores
 		private void numericUpDown1_ValueChanged(object sender, EventArgs e)
 		{
 			_dashboardSettings.RoundsCount = (int)roundsCount.Value;
+			_dashboardSettings.RoundsCompleted = 0;
 		}
 
 		private void setPause_Click(object sender, EventArgs e)
