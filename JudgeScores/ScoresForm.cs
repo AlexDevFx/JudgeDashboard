@@ -198,8 +198,6 @@ namespace JudgeScores
 				MainActionTypes.UndoAction,
 				() =>
 				{
-					if (IsRoundCompleted)
-						return;
 					if(_lastAction?.Player != null && _lastAction?.HitsAmount > 0)
 						_lastAction.Player.SubstrateHits(_lastAction.HitsAmount);
 					
@@ -208,37 +206,31 @@ namespace JudgeScores
 
 			_firstPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit1Level, () =>
 			{
-				if (!IsRoundCompleted)
 					_firstPlayer.SetHit(ScoresRange.First);
 			});
 
 			_firstPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit2Level, () =>
 			{
-				if (!IsRoundCompleted)
 					_firstPlayer.SetHit(ScoresRange.Second);
 			});
 
 			_firstPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit3Level, () =>
 			{
-				if (!IsRoundCompleted)
 					_firstPlayer.SetHit(ScoresRange.Third);
 			});
 
 			_secondPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit1Level, () =>
 			{
-				if (!IsRoundCompleted)
 					_secondPlayer.SetHit(ScoresRange.First);
 			});
 
 			_secondPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit2Level, () =>
 			{
-				if (!IsRoundCompleted)
 					_secondPlayer.SetHit(ScoresRange.Second);
 			});
 
 			_secondPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit3Level, () =>
 			{
-				if (!IsRoundCompleted)
 					_secondPlayer.SetHit(ScoresRange.Third);
 			});
 		}
