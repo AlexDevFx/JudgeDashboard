@@ -13,6 +13,7 @@ namespace JudgeScores
 		PlayerHit1Level = 9,
 		PlayerHit2Level = 10,
 		PlayerHit3Level = 11,
-		UndoAction = 12,
+		PlayerHit4Level = 12,
+		UndoAction = 20,
 	}
 }
