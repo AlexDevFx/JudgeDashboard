@@ -118,7 +118,6 @@ namespace JudgeScores
 			LoadSettings(SettingsFilePath);
 			
 			//StartRound();
-			
 		}
 
 		private void GlobalHookOnKeyUp(object sender, KeyEventArgs e)
@@ -336,7 +335,7 @@ namespace JudgeScores
 			{
 				string[] files = Directory.GetFiles(_dashboardSettings.RandomTimer2.FilePath, "*.mp3");
 
-				if(files.Any() == true)
+				if(files.Any())
 				{
 					int fileNumber = new Random(DateTime.Now.Second).Next(0, files.Length-1);
 
@@ -354,7 +353,7 @@ namespace JudgeScores
 
 		private void StartRound()
 		{
-			roundNumber.Text = $"Раунд {_dashboardSettings.RoundsCompleted + 1}";
+			roundNumber.Text = $@"Раунд {_dashboardSettings.RoundsCompleted + 1}";
 			
 			_mainRoundTimer.Start();
 			
@@ -734,7 +733,7 @@ namespace JudgeScores
 
 		private void ResizeLabels()
 		{
-			float fontScale = 0.85f;
+			var fontScale = 0.85f;
 
 			if (WindowState == FormWindowState.Maximized)
 			{
@@ -756,13 +755,13 @@ namespace JudgeScores
 
 			float fontSize = Math.Max(firstPlayerScores.Width * firstPlayerScores.Height / ((514 * 362) / 150F)*fontScale, 12F);
 
-			firstPlayerScores.Font = new Font("Microsoft Sans Serif", fontSize, FontStyle.Bold,GraphicsUnit.Point, ((byte)(204)));
-			secondPlayerScores.Font = new Font("Microsoft Sans Serif", fontSize, FontStyle.Bold, GraphicsUnit.Point, ((byte)(204)));
-			countdownTimer.Font = new Font("Microsoft Sans Serif", fontSize * 0.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(204)));
+			firstPlayerScores.Font = new Font("Microsoft Sans Serif", fontSize, FontStyle.Bold,GraphicsUnit.Point, 204);
+			secondPlayerScores.Font = new Font("Microsoft Sans Serif", fontSize, FontStyle.Bold, GraphicsUnit.Point, 204);
+			countdownTimer.Font = new Font("Microsoft Sans Serif", fontSize * 0.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
 
 			countdownTimer.Location = new Point(firstPlayerScores.Width + firstPlayerScores.Location.X - countdownTimer.Width / 2, countdownTimer.Location.Y);
 			
-			roundNumber.Font = new Font("Microsoft Sans Serif", fontSize * 0.12F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(204)));
+			roundNumber.Font = new Font("Microsoft Sans Serif", fontSize * 0.12F, FontStyle.Bold, GraphicsUnit.Point, 204);
 			roundNumber.Location = new Point(firstPlayerScores.Width + firstPlayerScores.Location.X - roundNumber.Width / 2, countdownTimer.Location.Y + countdownTimer.Height);
 		}
 
@@ -961,8 +960,8 @@ namespace JudgeScores
 						}
 					};
 
-					AssignPlayerBindings(settings.FirstPlayerBinds, firstPlayerBinds, InputButtonSource.First, _firstPlayerActionsProcessor);
-					AssignPlayerBindings(settings.SecondPlayerBinds, secondPlayerBinds, InputButtonSource.First, _secondPlayerActionsProcessor);
+					AssignPlayerBindings(settings.FirstPlayerBinds, firstPlayerBinds, _firstPlayerActionsProcessor);
+					AssignPlayerBindings(settings.SecondPlayerBinds, secondPlayerBinds, _secondPlayerActionsProcessor);
 					AssignPlayerSounds(settings.FirstPlayerSounds, _firstPlayer);
 					AssignPlayerSounds(settings.SecondPlayerSounds, _secondPlayer);
 					AssignPlayerHitsMap(settings.FirstPlayerHitsBinds, _firstPlayer,
@@ -972,13 +971,6 @@ namespace JudgeScores
 							{ ScoresRange.Second, firstPlayerTwoValue },
 							{ ScoresRange.Third, firstPlayerThreeValue },
 							{ ScoresRange.Fourth, firstPlayerFourthValue }
-						}, 
-						new Dictionary<ScoresRange, Label>
-						{
-							{ ScoresRange.First, button1Name1st },
-							{ ScoresRange.Second, button2Name1st },
-							{ ScoresRange.Third, button3Name1st },
-							{ ScoresRange.Fourth, button4Name1st }
 						},
 						new Dictionary<ScoresRange, Button>
 						{
@@ -1001,13 +993,6 @@ namespace JudgeScores
 							{ ScoresRange.Second, secondPlayerTwoValue },
 							{ ScoresRange.Third, secondPlayerThreeValue },
 							{ ScoresRange.Fourth, secondPlayerFourthValue }
-						}, 
-						new Dictionary<ScoresRange, Label>
-						{
-							{ ScoresRange.First, button1Name2nd },
-							{ ScoresRange.Second, button2Name2nd },
-							{ ScoresRange.Third, button3Name2nd },
-							{ ScoresRange.Fourth, button4Name2nd }
 						},
 						new Dictionary<ScoresRange, Button>
 						{
@@ -1027,7 +1012,7 @@ namespace JudgeScores
 			}
 		}
 		
-		private void AssignPlayerBindings(Dictionary<MainActionTypes, ButtonConfig> buttonBindings, Dictionary<MainActionTypes, ScoresBinds> playerBinds, InputButtonSource inputButtonSource,
+		private void AssignPlayerBindings(Dictionary<MainActionTypes, ButtonConfig> buttonBindings, Dictionary<MainActionTypes, ScoresBinds> playerBinds,
 			ActionProcessor playerProcessor)
 		{
 			if (buttonBindings == null)
@@ -1062,7 +1047,7 @@ namespace JudgeScores
 		}
 		
 		private void AssignPlayerHitsMap(Dictionary<ScoresRange, ushort> hitsMap, Player player, 
-			Dictionary<ScoresRange, Button> buttons, Dictionary<ScoresRange, Label> buttonLabel, 
+			Dictionary<ScoresRange, Button> buttons, 
 			Dictionary<ScoresRange, Button> soundButton, Dictionary<ScoresRange, NumericUpDown> numerics)
 		{
 			if ( hitsMap?.Any() != true )
@@ -1275,7 +1260,7 @@ namespace JudgeScores
 						assignAction: btn =>
 						{
 							AssignFunctionalButton(arg, MainActionTypes.UndoAction);
-							undoActionButton.Text = $"{arg}";
+							undoActionButton.Text = $@"{arg}";
 						}
 					);
 				}, new[]{ InputButtonSource.Any });
