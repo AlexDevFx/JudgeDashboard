@@ -31,6 +31,7 @@
 			this.countdownTimer = new System.Windows.Forms.Label();
 			this.JudgesDashboard = new System.Windows.Forms.TabControl();
 			this.ScoresPage = new System.Windows.Forms.TabPage();
+			this.roundNumber = new System.Windows.Forms.Label();
 			this.secondPlayerScores = new System.Windows.Forms.Label();
 			this.firstPlayerScores = new System.Windows.Forms.Label();
 			this.SettingsPage = new System.Windows.Forms.TabPage();
@@ -159,6 +160,7 @@
 			// 
 			// ScoresPage
 			// 
+			this.ScoresPage.Controls.Add(this.roundNumber);
 			this.ScoresPage.Controls.Add(this.countdownTimer);
 			this.ScoresPage.Controls.Add(this.secondPlayerScores);
 			this.ScoresPage.Controls.Add(this.firstPlayerScores);
@@ -170,6 +172,20 @@
 			this.ScoresPage.TabIndex = 0;
 			this.ScoresPage.Text = "Раунд";
 			this.ScoresPage.UseVisualStyleBackColor = true;
+			// 
+			// roundNumber
+			// 
+			this.roundNumber.AutoSize = true;
+			this.roundNumber.BackColor = System.Drawing.Color.Black;
+			this.roundNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold,
+				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+			this.roundNumber.ForeColor = System.Drawing.Color.Snow;
+			this.roundNumber.Location = new System.Drawing.Point(493, 58);
+			this.roundNumber.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.roundNumber.Name = "roundNumber";
+			this.roundNumber.Size = new System.Drawing.Size(209, 55);
+			this.roundNumber.TabIndex = 3;
+			this.roundNumber.Text = "Раунд 1";
 			// 
 			// secondPlayerScores
 			// 
@@ -219,11 +235,11 @@
 			this.SettingsPage.Controls.Add(this.SetTimer);
 			this.SettingsPage.Controls.Add(this.secondsPartTimer);
 			this.SettingsPage.Controls.Add(this.minutesPartTimer);
-			this.SettingsPage.Location = new System.Drawing.Point(4, 24);
+			this.SettingsPage.Location = new System.Drawing.Point(4, 22);
 			this.SettingsPage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.SettingsPage.Name = "SettingsPage";
 			this.SettingsPage.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.SettingsPage.Size = new System.Drawing.Size(1195, 548);
+			this.SettingsPage.Size = new System.Drawing.Size(1195, 550);
 			this.SettingsPage.TabIndex = 1;
 			this.SettingsPage.Text = "Настройки";
 			this.SettingsPage.UseVisualStyleBackColor = true;
@@ -1271,6 +1287,7 @@
 		private System.Windows.Forms.Button setRoundRemainSound;
 		private System.Windows.Forms.Label undoActionButton;
 		private System.Windows.Forms.Button undoAction;
+		private System.Windows.Forms.Label roundNumber;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
 	}
 }
