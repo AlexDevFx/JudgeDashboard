@@ -181,8 +181,7 @@ namespace JudgeScores
 					_secondPlayer.ResetScores();
 					_dashboardSettings.RoundsCompleted = 0;
 					
-					_lastAction.Player = null;
-					_lastAction.HitsAmount = 0;
+					_lastActions.Clear();
 					
 					PlaySoundForAction(MainActionTypes.ResetTimer);
 				});
@@ -917,7 +916,6 @@ namespace JudgeScores
 							new ScoresBinds
 							{
 								Label = button4Name1st,
-								MessageFuncStr = (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +4 балла для первого участника",
 								MessageFuncChar = (arg) => $"Кнопка <{arg}> назначена +4 балла для первого участника",
 							}
 						}
@@ -954,7 +952,6 @@ namespace JudgeScores
 							new ScoresBinds
 							{
 								Label = button4Name2nd,
-								MessageFuncStr = (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +4 балла для второго участника",
 								MessageFuncChar = (arg) => $"Кнопка <{arg}> назначена +4 балла для второго участника",
 							}
 						}
@@ -1269,7 +1266,7 @@ namespace JudgeScores
 		private void firstPlayerForthValue_Click(object sender, EventArgs e)
 		{
 			AddButtonAssignmentPlayer(new[] { InputButtonSource.First, InputButtonSource.Keyboard }, _firstPlayerActionsProcessor, MainActionTypes.PlayerHit4Level, button4Name1st,
-				(arg) => $"Кнопка <{GetButtonName(arg)}> назначена +4 балла для первого участника", (arg) => $"Кнопка <{arg}> назначена +4 балла для первого участника");
+				(arg) => $"Кнопка <{arg}> назначена +4 балла для первого участника");
 		}
 
 		private void player1Scores4_ValueChanged(object sender, EventArgs e)
@@ -1297,7 +1294,7 @@ namespace JudgeScores
 		private void secondPlayerFourthValue_MouseClick(object sender, MouseEventArgs e)
 		{
 			AddButtonAssignmentPlayer(new[] { InputButtonSource.First, InputButtonSource.Keyboard }, _secondPlayerActionsProcessor, MainActionTypes.PlayerHit4Level, button4Name2nd,
-				(arg) => $"Кнопка <{GetButtonName(arg)}> назначена +4 балла для первого участника", (arg) => $"Кнопка <{arg}> назначена +4 балла для первого участника");
+				(arg) => $"Кнопка <{arg}> назначена +4 балла для первого участника");
 		}
 	}
 }
