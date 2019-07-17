@@ -42,6 +42,7 @@
 			this.rnd2LowerLimit = new System.Windows.Forms.NumericUpDown();
 			this.rnd2UpperLimit = new System.Windows.Forms.NumericUpDown();
 			this.rnd2IsEnable = new System.Windows.Forms.CheckBox();
+			this.notifyText = new System.Windows.Forms.Label();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.rnd1SetSound = new System.Windows.Forms.Button();
@@ -72,6 +73,10 @@
 			this.pauseSeconds = new System.Windows.Forms.NumericUpDown();
 			this.pauseMinutes = new System.Windows.Forms.NumericUpDown();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.set4Sound2nd = new System.Windows.Forms.Button();
+			this.button4Name2nd = new System.Windows.Forms.Label();
+			this.player2Scores4 = new System.Windows.Forms.NumericUpDown();
+			this.secondPlayerFourthValue = new System.Windows.Forms.Button();
 			this.player2Scores3 = new System.Windows.Forms.NumericUpDown();
 			this.player2Scores2 = new System.Windows.Forms.NumericUpDown();
 			this.player2Scores1 = new System.Windows.Forms.NumericUpDown();
@@ -85,6 +90,10 @@
 			this.secondPlayerTwoValue = new System.Windows.Forms.Button();
 			this.secondPlayerOneValue = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.set4Sound1st = new System.Windows.Forms.Button();
+			this.button4Name1st = new System.Windows.Forms.Label();
+			this.player1Scores4 = new System.Windows.Forms.NumericUpDown();
+			this.firstPlayerFourthValue = new System.Windows.Forms.Button();
 			this.player1Scores3 = new System.Windows.Forms.NumericUpDown();
 			this.player1Scores2 = new System.Windows.Forms.NumericUpDown();
 			this.player1Scores1 = new System.Windows.Forms.NumericUpDown();
@@ -98,7 +107,6 @@
 			this.firstPlayerTwoValue = new System.Windows.Forms.Button();
 			this.firstPlayerOneValue = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
-			this.notifyText = new System.Windows.Forms.Label();
 			this.SetTimer = new System.Windows.Forms.Button();
 			this.secondsPartTimer = new System.Windows.Forms.NumericUpDown();
 			this.minutesPartTimer = new System.Windows.Forms.NumericUpDown();
@@ -120,10 +128,12 @@
 			((System.ComponentModel.ISupportInitialize) (this.pauseSeconds)).BeginInit();
 			((System.ComponentModel.ISupportInitialize) (this.pauseMinutes)).BeginInit();
 			this.groupBox2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize) (this.player2Scores4)).BeginInit();
 			((System.ComponentModel.ISupportInitialize) (this.player2Scores3)).BeginInit();
 			((System.ComponentModel.ISupportInitialize) (this.player2Scores2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize) (this.player2Scores1)).BeginInit();
 			this.groupBox1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize) (this.player1Scores4)).BeginInit();
 			((System.ComponentModel.ISupportInitialize) (this.player1Scores3)).BeginInit();
 			((System.ComponentModel.ISupportInitialize) (this.player1Scores2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize) (this.player1Scores1)).BeginInit();
@@ -131,9 +141,6 @@
 			((System.ComponentModel.ISupportInitialize) (this.minutesPartTimer)).BeginInit();
 			this.loggerPage.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// countdownTimer
-			// 
 			this.countdownTimer.AutoSize = true;
 			this.countdownTimer.BackColor = System.Drawing.Color.Black;
 			this.countdownTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F,
@@ -145,9 +152,6 @@
 			this.countdownTimer.Size = new System.Drawing.Size(150, 55);
 			this.countdownTimer.TabIndex = 0;
 			this.countdownTimer.Text = "00:00";
-			// 
-			// JudgesDashboard
-			// 
 			this.JudgesDashboard.Controls.Add(this.ScoresPage);
 			this.JudgesDashboard.Controls.Add(this.SettingsPage);
 			this.JudgesDashboard.Controls.Add(this.loggerPage);
@@ -155,11 +159,8 @@
 			this.JudgesDashboard.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.JudgesDashboard.Name = "JudgesDashboard";
 			this.JudgesDashboard.SelectedIndex = 0;
-			this.JudgesDashboard.Size = new System.Drawing.Size(1203, 576);
+			this.JudgesDashboard.Size = new System.Drawing.Size(1410, 592);
 			this.JudgesDashboard.TabIndex = 1;
-			// 
-			// ScoresPage
-			// 
 			this.ScoresPage.Controls.Add(this.roundNumber);
 			this.ScoresPage.Controls.Add(this.countdownTimer);
 			this.ScoresPage.Controls.Add(this.secondPlayerScores);
@@ -168,13 +169,10 @@
 			this.ScoresPage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.ScoresPage.Name = "ScoresPage";
 			this.ScoresPage.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.ScoresPage.Size = new System.Drawing.Size(1195, 548);
+			this.ScoresPage.Size = new System.Drawing.Size(1402, 564);
 			this.ScoresPage.TabIndex = 0;
 			this.ScoresPage.Text = "Раунд";
 			this.ScoresPage.UseVisualStyleBackColor = true;
-			// 
-			// roundNumber
-			// 
 			this.roundNumber.AutoSize = true;
 			this.roundNumber.BackColor = System.Drawing.Color.Black;
 			this.roundNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold,
@@ -186,38 +184,30 @@
 			this.roundNumber.Size = new System.Drawing.Size(209, 55);
 			this.roundNumber.TabIndex = 3;
 			this.roundNumber.Text = "Раунд 1";
-			// 
-			// secondPlayerScores
-			// 
 			this.secondPlayerScores.BackColor = System.Drawing.Color.Blue;
-			this.secondPlayerScores.Font = new System.Drawing.Font("Microsoft Sans Serif", 240F,
+			this.secondPlayerScores.Font = new System.Drawing.Font("Microsoft Sans Serif", 210F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.secondPlayerScores.ForeColor = System.Drawing.SystemColors.Window;
-			this.secondPlayerScores.Location = new System.Drawing.Point(600, 3);
+			this.secondPlayerScores.Location = new System.Drawing.Point(710, 3);
 			this.secondPlayerScores.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.secondPlayerScores.Name = "secondPlayerScores";
-			this.secondPlayerScores.Size = new System.Drawing.Size(595, 542);
+			this.secondPlayerScores.Size = new System.Drawing.Size(696, 542);
 			this.secondPlayerScores.TabIndex = 2;
-			this.secondPlayerScores.Text = "99";
+			this.secondPlayerScores.Text = "199";
 			this.secondPlayerScores.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// firstPlayerScores
-			// 
 			this.firstPlayerScores.BackColor = System.Drawing.Color.Red;
-			this.firstPlayerScores.Font = new System.Drawing.Font("Microsoft Sans Serif", 240F,
+			this.firstPlayerScores.Font = new System.Drawing.Font("Microsoft Sans Serif", 210F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.firstPlayerScores.ForeColor = System.Drawing.SystemColors.Window;
 			this.firstPlayerScores.Location = new System.Drawing.Point(4, 3);
 			this.firstPlayerScores.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.firstPlayerScores.Name = "firstPlayerScores";
-			this.firstPlayerScores.Size = new System.Drawing.Size(600, 542);
+			this.firstPlayerScores.Size = new System.Drawing.Size(705, 542);
 			this.firstPlayerScores.TabIndex = 1;
-			this.firstPlayerScores.Text = "99";
+			this.firstPlayerScores.Text = "199";
 			this.firstPlayerScores.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// SettingsPage
-			// 
 			this.SettingsPage.Controls.Add(this.groupBox5);
+			this.SettingsPage.Controls.Add(this.notifyText);
 			this.SettingsPage.Controls.Add(this.groupBox4);
 			this.SettingsPage.Controls.Add(this.groupBox3);
 			this.SettingsPage.Controls.Add(this.saveSettings);
@@ -231,7 +221,6 @@
 			this.SettingsPage.Controls.Add(this.groupBox2);
 			this.SettingsPage.Controls.Add(this.groupBox1);
 			this.SettingsPage.Controls.Add(this.label1);
-			this.SettingsPage.Controls.Add(this.notifyText);
 			this.SettingsPage.Controls.Add(this.SetTimer);
 			this.SettingsPage.Controls.Add(this.secondsPartTimer);
 			this.SettingsPage.Controls.Add(this.minutesPartTimer);
@@ -239,20 +228,17 @@
 			this.SettingsPage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.SettingsPage.Name = "SettingsPage";
 			this.SettingsPage.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.SettingsPage.Size = new System.Drawing.Size(1195, 550);
+			this.SettingsPage.Size = new System.Drawing.Size(1402, 566);
 			this.SettingsPage.TabIndex = 1;
 			this.SettingsPage.Text = "Настройки";
 			this.SettingsPage.UseVisualStyleBackColor = true;
-			// 
-			// groupBox5
-			// 
 			this.groupBox5.Controls.Add(this.label6);
 			this.groupBox5.Controls.Add(this.rnd2SetSound);
 			this.groupBox5.Controls.Add(this.label7);
 			this.groupBox5.Controls.Add(this.rnd2LowerLimit);
 			this.groupBox5.Controls.Add(this.rnd2UpperLimit);
 			this.groupBox5.Controls.Add(this.rnd2IsEnable);
-			this.groupBox5.Location = new System.Drawing.Point(911, 260);
+			this.groupBox5.Location = new System.Drawing.Point(924, 291);
 			this.groupBox5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.groupBox5.Name = "groupBox5";
 			this.groupBox5.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -260,9 +246,6 @@
 			this.groupBox5.TabIndex = 51;
 			this.groupBox5.TabStop = false;
 			this.groupBox5.Text = "Слуйчайный таймер II";
-			// 
-			// label6
-			// 
 			this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
 				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.label6.Location = new System.Drawing.Point(7, 89);
@@ -272,9 +255,6 @@
 			this.label6.TabIndex = 32;
 			this.label6.Text = "Верхняя граница, сек.";
 			this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// rnd2SetSound
-			// 
 			this.rnd2SetSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.rnd2SetSound.Location = new System.Drawing.Point(10, 136);
@@ -285,9 +265,6 @@
 			this.rnd2SetSound.Text = "Звук";
 			this.rnd2SetSound.UseVisualStyleBackColor = true;
 			this.rnd2SetSound.Click += new System.EventHandler(this.rnd2SetSound_Click);
-			// 
-			// label7
-			// 
 			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
 				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.label7.Location = new System.Drawing.Point(7, 52);
@@ -297,9 +274,6 @@
 			this.label7.TabIndex = 21;
 			this.label7.Text = "Нижняя граница, сек.";
 			this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// rnd2LowerLimit
-			// 
 			this.rnd2LowerLimit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.rnd2LowerLimit.Location = new System.Drawing.Point(195, 52);
@@ -311,9 +285,6 @@
 			this.rnd2LowerLimit.TabIndex = 6;
 			this.rnd2LowerLimit.Value = new decimal(new int[] {1, 0, 0, 0});
 			this.rnd2LowerLimit.ValueChanged += new System.EventHandler(this.rnd2LowerLimit_ValueChanged);
-			// 
-			// rnd2UpperLimit
-			// 
 			this.rnd2UpperLimit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.rnd2UpperLimit.Location = new System.Drawing.Point(195, 89);
@@ -325,9 +296,6 @@
 			this.rnd2UpperLimit.TabIndex = 5;
 			this.rnd2UpperLimit.Value = new decimal(new int[] {1, 0, 0, 0});
 			this.rnd2UpperLimit.ValueChanged += new System.EventHandler(this.rnd2UpperLimit_ValueChanged);
-			// 
-			// rnd2IsEnable
-			// 
 			this.rnd2IsEnable.Location = new System.Drawing.Point(8, 20);
 			this.rnd2IsEnable.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.rnd2IsEnable.Name = "rnd2IsEnable";
@@ -336,16 +304,21 @@
 			this.rnd2IsEnable.Text = "Активировать/Отключить";
 			this.rnd2IsEnable.UseVisualStyleBackColor = true;
 			this.rnd2IsEnable.CheckedChanged += new System.EventHandler(this.rnd2IsEnable_CheckedChanged);
-			// 
-			// groupBox4
-			// 
+			this.notifyText.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F,
+				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+			this.notifyText.Location = new System.Drawing.Point(6, 528);
+			this.notifyText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.notifyText.Name = "notifyText";
+			this.notifyText.Size = new System.Drawing.Size(1185, 28);
+			this.notifyText.TabIndex = 10;
+			this.notifyText.Text = "Уведомление";
 			this.groupBox4.Controls.Add(this.label5);
 			this.groupBox4.Controls.Add(this.rnd1SetSound);
 			this.groupBox4.Controls.Add(this.label4);
 			this.groupBox4.Controls.Add(this.rnd1LowerLimit);
 			this.groupBox4.Controls.Add(this.rnd1UpperLimit);
 			this.groupBox4.Controls.Add(this.rnd1IsEnable);
-			this.groupBox4.Location = new System.Drawing.Point(645, 260);
+			this.groupBox4.Location = new System.Drawing.Point(648, 291);
 			this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.groupBox4.Name = "groupBox4";
 			this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -353,9 +326,6 @@
 			this.groupBox4.TabIndex = 50;
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "Слуйчайный таймер I";
-			// 
-			// label5
-			// 
 			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
 				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.label5.Location = new System.Drawing.Point(7, 89);
@@ -365,9 +335,6 @@
 			this.label5.TabIndex = 32;
 			this.label5.Text = "Верхняя граница, сек.";
 			this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// rnd1SetSound
-			// 
 			this.rnd1SetSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.rnd1SetSound.Location = new System.Drawing.Point(8, 135);
@@ -378,9 +345,6 @@
 			this.rnd1SetSound.Text = "Звук";
 			this.rnd1SetSound.UseVisualStyleBackColor = true;
 			this.rnd1SetSound.Click += new System.EventHandler(this.rnd1SetSound_Click);
-			// 
-			// label4
-			// 
 			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
 				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.label4.Location = new System.Drawing.Point(7, 52);
@@ -390,9 +354,6 @@
 			this.label4.TabIndex = 21;
 			this.label4.Text = "Нижняя граница, сек.";
 			this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// rnd1LowerLimit
-			// 
 			this.rnd1LowerLimit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.rnd1LowerLimit.Location = new System.Drawing.Point(195, 52);
@@ -404,9 +365,6 @@
 			this.rnd1LowerLimit.TabIndex = 6;
 			this.rnd1LowerLimit.Value = new decimal(new int[] {1, 0, 0, 0});
 			this.rnd1LowerLimit.ValueChanged += new System.EventHandler(this.rnd1LowerLimit_ValueChanged);
-			// 
-			// rnd1UpperLimit
-			// 
 			this.rnd1UpperLimit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.rnd1UpperLimit.Location = new System.Drawing.Point(195, 89);
@@ -418,9 +376,6 @@
 			this.rnd1UpperLimit.TabIndex = 5;
 			this.rnd1UpperLimit.Value = new decimal(new int[] {1, 0, 0, 0});
 			this.rnd1UpperLimit.ValueChanged += new System.EventHandler(this.rnd1UpperLimit_ValueChanged);
-			// 
-			// rnd1IsEnable
-			// 
 			this.rnd1IsEnable.Location = new System.Drawing.Point(8, 20);
 			this.rnd1IsEnable.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.rnd1IsEnable.Name = "rnd1IsEnable";
@@ -429,9 +384,6 @@
 			this.rnd1IsEnable.Text = "Активировать/Отключить";
 			this.rnd1IsEnable.UseVisualStyleBackColor = true;
 			this.rnd1IsEnable.CheckedChanged += new System.EventHandler(this.rnd1IsEnable_CheckedChanged);
-			// 
-			// groupBox3
-			// 
 			this.groupBox3.Controls.Add(this.setUndoSound);
 			this.groupBox3.Controls.Add(this.undoActionButton);
 			this.groupBox3.Controls.Add(this.undoAction);
@@ -445,7 +397,7 @@
 			this.groupBox3.Controls.Add(this.setRoundEndSound);
 			this.groupBox3.Controls.Add(this.setPauseRemainSound);
 			this.groupBox3.Controls.Add(this.setRoundRemainSound);
-			this.groupBox3.Location = new System.Drawing.Point(10, 260);
+			this.groupBox3.Location = new System.Drawing.Point(8, 291);
 			this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.groupBox3.Name = "groupBox3";
 			this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -453,9 +405,6 @@
 			this.groupBox3.TabIndex = 49;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Раунд";
-			// 
-			// setUndoSound
-			// 
 			this.setUndoSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.setUndoSound.Location = new System.Drawing.Point(370, 123);
@@ -466,9 +415,6 @@
 			this.setUndoSound.Text = "Звук <Отмена>";
 			this.setUndoSound.UseVisualStyleBackColor = true;
 			this.setUndoSound.Click += new System.EventHandler(this.setUndoSound_Click);
-			// 
-			// undoActionButton
-			// 
 			this.undoActionButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.undoActionButton.Location = new System.Drawing.Point(170, 123);
@@ -478,9 +424,6 @@
 			this.undoActionButton.TabIndex = 42;
 			this.undoActionButton.Text = "Кнопка <Отмена>";
 			this.undoActionButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// undoAction
-			// 
 			this.undoAction.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
 				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.undoAction.Location = new System.Drawing.Point(7, 123);
@@ -491,9 +434,6 @@
 			this.undoAction.Text = "Отмена";
 			this.undoAction.UseVisualStyleBackColor = true;
 			this.undoAction.Click += new System.EventHandler(this.undoAction_Click_1);
-			// 
-			// assignStartButton
-			// 
 			this.assignStartButton.Font =
 				new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
 			this.assignStartButton.Location = new System.Drawing.Point(7, 22);
@@ -504,9 +444,6 @@
 			this.assignStartButton.Text = "Старт/Стоп таймера";
 			this.assignStartButton.UseVisualStyleBackColor = true;
 			this.assignStartButton.Click += new System.EventHandler(this.assignStartButton_Click);
-			// 
-			// resetTimer
-			// 
 			this.resetTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
 				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.resetTimer.Location = new System.Drawing.Point(7, 91);
@@ -517,9 +454,6 @@
 			this.resetTimer.Text = "Сброс таймера";
 			this.resetTimer.UseVisualStyleBackColor = true;
 			this.resetTimer.Click += new System.EventHandler(this.button3_Click);
-			// 
-			// startTimerButton
-			// 
 			this.startTimerButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.startTimerButton.Location = new System.Drawing.Point(169, 20);
@@ -529,9 +463,6 @@
 			this.startTimerButton.TabIndex = 20;
 			this.startTimerButton.Text = "Кнопка <Cтарт/Стоп>";
 			this.startTimerButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// resetTimerButton
-			// 
 			this.resetTimerButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.resetTimerButton.Location = new System.Drawing.Point(169, 91);
@@ -541,9 +472,6 @@
 			this.resetTimerButton.TabIndex = 21;
 			this.resetTimerButton.Text = "Кнопка <Сброс>";
 			this.resetTimerButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// setSoundStart
-			// 
 			this.setSoundStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.setSoundStart.Location = new System.Drawing.Point(370, 22);
@@ -554,9 +482,6 @@
 			this.setSoundStart.Text = "Звук <Старт>";
 			this.setSoundStart.UseVisualStyleBackColor = true;
 			this.setSoundStart.Click += new System.EventHandler(this.setSoundStart_Click);
-			// 
-			// setSoundStop
-			// 
 			this.setSoundStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.setSoundStop.Location = new System.Drawing.Point(370, 57);
@@ -567,9 +492,6 @@
 			this.setSoundStop.Text = "Звук <Стоп>";
 			this.setSoundStop.UseVisualStyleBackColor = true;
 			this.setSoundStop.Click += new System.EventHandler(this.setSoundStop_Click);
-			// 
-			// setSoundReset
-			// 
 			this.setSoundReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.setSoundReset.Location = new System.Drawing.Point(370, 90);
@@ -580,9 +502,6 @@
 			this.setSoundReset.Text = "Звук <Сброс>";
 			this.setSoundReset.UseVisualStyleBackColor = true;
 			this.setSoundReset.Click += new System.EventHandler(this.setSoundReset_Click);
-			// 
-			// setRoundEndSound
-			// 
 			this.setRoundEndSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.setRoundEndSound.Location = new System.Drawing.Point(8, 167);
@@ -593,9 +512,6 @@
 			this.setRoundEndSound.Text = "Звук <Конец раунда>";
 			this.setRoundEndSound.UseVisualStyleBackColor = true;
 			this.setRoundEndSound.Click += new System.EventHandler(this.setRoundEndSound_Click);
-			// 
-			// setPauseRemainSound
-			// 
 			this.setPauseRemainSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.setPauseRemainSound.Location = new System.Drawing.Point(206, 168);
@@ -606,9 +522,6 @@
 			this.setPauseRemainSound.Text = "Звук <10 секунд до паузы>";
 			this.setPauseRemainSound.UseVisualStyleBackColor = true;
 			this.setPauseRemainSound.Click += new System.EventHandler(this.setPauseRemainSound_Click);
-			// 
-			// setRoundRemainSound
-			// 
 			this.setRoundRemainSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.setRoundRemainSound.Location = new System.Drawing.Point(406, 168);
@@ -619,9 +532,6 @@
 			this.setRoundRemainSound.Text = "Звук <10 секунд до конца раунда>";
 			this.setRoundRemainSound.UseVisualStyleBackColor = true;
 			this.setRoundRemainSound.Click += new System.EventHandler(this.setRoundRemainSound_Click);
-			// 
-			// saveSettings
-			// 
 			this.saveSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.saveSettings.Location = new System.Drawing.Point(18, 43);
@@ -632,9 +542,6 @@
 			this.saveSettings.Text = "Сохранить";
 			this.saveSettings.UseVisualStyleBackColor = true;
 			this.saveSettings.Click += new System.EventHandler(this.saveSettings_Click);
-			// 
-			// loadSettings
-			// 
 			this.loadSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.loadSettings.Location = new System.Drawing.Point(18, 6);
@@ -645,9 +552,6 @@
 			this.loadSettings.Text = "Загрузить";
 			this.loadSettings.UseVisualStyleBackColor = true;
 			this.loadSettings.Click += new System.EventHandler(this.loadSettings_Click);
-			// 
-			// roundsCount
-			// 
 			this.roundsCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.roundsCount.Location = new System.Drawing.Point(1023, 31);
@@ -659,9 +563,6 @@
 			this.roundsCount.TabIndex = 46;
 			this.roundsCount.Value = new decimal(new int[] {1, 0, 0, 0});
 			this.roundsCount.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
-			// 
-			// label2
-			// 
 			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
 				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.label2.Location = new System.Drawing.Point(952, 3);
@@ -671,9 +572,6 @@
 			this.label2.TabIndex = 45;
 			this.label2.Text = "Количество раундов";
 			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// label3
-			// 
 			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
 				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.label3.Location = new System.Drawing.Point(724, 3);
@@ -683,9 +581,6 @@
 			this.label3.TabIndex = 44;
 			this.label3.Text = "Установка паузы";
 			this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// setPause
-			// 
 			this.setPause.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
 				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.setPause.Location = new System.Drawing.Point(735, 73);
@@ -696,9 +591,6 @@
 			this.setPause.Text = "Установить паузу";
 			this.setPause.UseVisualStyleBackColor = true;
 			this.setPause.Click += new System.EventHandler(this.setPause_Click);
-			// 
-			// pauseSeconds
-			// 
 			this.pauseSeconds.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.pauseSeconds.Location = new System.Drawing.Point(830, 32);
@@ -707,9 +599,6 @@
 			this.pauseSeconds.Name = "pauseSeconds";
 			this.pauseSeconds.Size = new System.Drawing.Size(52, 29);
 			this.pauseSeconds.TabIndex = 42;
-			// 
-			// pauseMinutes
-			// 
 			this.pauseMinutes.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.pauseMinutes.Location = new System.Drawing.Point(760, 32);
@@ -718,10 +607,11 @@
 			this.pauseMinutes.Name = "pauseMinutes";
 			this.pauseMinutes.Size = new System.Drawing.Size(55, 29);
 			this.pauseMinutes.TabIndex = 41;
-			// 
-			// groupBox2
-			// 
 			this.groupBox2.BackColor = System.Drawing.Color.Turquoise;
+			this.groupBox2.Controls.Add(this.set4Sound2nd);
+			this.groupBox2.Controls.Add(this.button4Name2nd);
+			this.groupBox2.Controls.Add(this.player2Scores4);
+			this.groupBox2.Controls.Add(this.secondPlayerFourthValue);
 			this.groupBox2.Controls.Add(this.player2Scores3);
 			this.groupBox2.Controls.Add(this.player2Scores2);
 			this.groupBox2.Controls.Add(this.player2Scores1);
@@ -740,13 +630,51 @@
 			this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.groupBox2.Size = new System.Drawing.Size(522, 137);
+			this.groupBox2.Size = new System.Drawing.Size(522, 174);
 			this.groupBox2.TabIndex = 35;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Второй участник";
-			// 
-			// player2Scores3
-			// 
+			this.set4Sound2nd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
+				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+			this.set4Sound2nd.Location = new System.Drawing.Point(406, 132);
+			this.set4Sound2nd.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.set4Sound2nd.Name = "set4Sound2nd";
+			this.set4Sound2nd.Size = new System.Drawing.Size(103, 27);
+			this.set4Sound2nd.TabIndex = 55;
+			this.set4Sound2nd.Text = "Звук <+4>";
+			this.set4Sound2nd.UseVisualStyleBackColor = true;
+			this.set4Sound2nd.Click += new System.EventHandler(this.set4Sound2nd_Click);
+			this.button4Name2nd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
+				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+			this.button4Name2nd.Location = new System.Drawing.Point(196, 130);
+			this.button4Name2nd.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.button4Name2nd.Name = "button4Name2nd";
+			this.button4Name2nd.Size = new System.Drawing.Size(202, 29);
+			this.button4Name2nd.TabIndex = 54;
+			this.button4Name2nd.Text = "Кнопка +4";
+			this.button4Name2nd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.player2Scores4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
+				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+			this.player2Scores4.Location = new System.Drawing.Point(8, 132);
+			this.player2Scores4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.player2Scores4.Maximum = new decimal(new int[] {200, 0, 0, 0});
+			this.player2Scores4.Minimum = new decimal(new int[] {1, 0, 0, 0});
+			this.player2Scores4.Name = "player2Scores4";
+			this.player2Scores4.Size = new System.Drawing.Size(52, 29);
+			this.player2Scores4.TabIndex = 53;
+			this.player2Scores4.Value = new decimal(new int[] {1, 0, 0, 0});
+			this.player2Scores4.ValueChanged += new System.EventHandler(this.player2Scores4_ValueChanged);
+			this.secondPlayerFourthValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
+				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+			this.secondPlayerFourthValue.Location = new System.Drawing.Point(68, 132);
+			this.secondPlayerFourthValue.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.secondPlayerFourthValue.Name = "secondPlayerFourthValue";
+			this.secondPlayerFourthValue.Size = new System.Drawing.Size(120, 27);
+			this.secondPlayerFourthValue.TabIndex = 52;
+			this.secondPlayerFourthValue.Text = "+4 балла";
+			this.secondPlayerFourthValue.UseVisualStyleBackColor = true;
+			this.secondPlayerFourthValue.MouseClick +=
+				new System.Windows.Forms.MouseEventHandler(this.secondPlayerFourthValue_MouseClick);
 			this.player2Scores3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.player2Scores3.Location = new System.Drawing.Point(8, 98);
@@ -758,9 +686,6 @@
 			this.player2Scores3.TabIndex = 51;
 			this.player2Scores3.Value = new decimal(new int[] {1, 0, 0, 0});
 			this.player2Scores3.ValueChanged += new System.EventHandler(this.player2Scores3_ValueChanged);
-			// 
-			// player2Scores2
-			// 
 			this.player2Scores2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.player2Scores2.Location = new System.Drawing.Point(8, 60);
@@ -772,9 +697,6 @@
 			this.player2Scores2.TabIndex = 50;
 			this.player2Scores2.Value = new decimal(new int[] {1, 0, 0, 0});
 			this.player2Scores2.ValueChanged += new System.EventHandler(this.player2Scores2_ValueChanged);
-			// 
-			// player2Scores1
-			// 
 			this.player2Scores1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.player2Scores1.Location = new System.Drawing.Point(8, 25);
@@ -786,9 +708,6 @@
 			this.player2Scores1.TabIndex = 49;
 			this.player2Scores1.Value = new decimal(new int[] {1, 0, 0, 0});
 			this.player2Scores1.ValueChanged += new System.EventHandler(this.player2Scores1_ValueChanged);
-			// 
-			// set3Sound2nd
-			// 
 			this.set3Sound2nd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.set3Sound2nd.Location = new System.Drawing.Point(406, 99);
@@ -799,9 +718,6 @@
 			this.set3Sound2nd.Text = "Звук <+3>";
 			this.set3Sound2nd.UseVisualStyleBackColor = true;
 			this.set3Sound2nd.Click += new System.EventHandler(this.set3Sound2nd_Click);
-			// 
-			// set2Sound2nd
-			// 
 			this.set2Sound2nd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.set2Sound2nd.Location = new System.Drawing.Point(406, 63);
@@ -812,9 +728,6 @@
 			this.set2Sound2nd.Text = "Звук <+2>";
 			this.set2Sound2nd.UseVisualStyleBackColor = true;
 			this.set2Sound2nd.Click += new System.EventHandler(this.set2Sound2nd_Click);
-			// 
-			// set1Sound2nd
-			// 
 			this.set1Sound2nd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.set1Sound2nd.Location = new System.Drawing.Point(406, 27);
@@ -825,9 +738,6 @@
 			this.set1Sound2nd.Text = "Звук <+1>";
 			this.set1Sound2nd.UseVisualStyleBackColor = true;
 			this.set1Sound2nd.Click += new System.EventHandler(this.set1Sound2nd_Click);
-			// 
-			// button2Name2nd
-			// 
 			this.button2Name2nd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.button2Name2nd.Location = new System.Drawing.Point(196, 65);
@@ -837,9 +747,6 @@
 			this.button2Name2nd.TabIndex = 19;
 			this.button2Name2nd.Text = "Кнопка +2";
 			this.button2Name2nd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// button3Name2nd
-			// 
 			this.button3Name2nd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.button3Name2nd.Location = new System.Drawing.Point(196, 100);
@@ -849,9 +756,6 @@
 			this.button3Name2nd.TabIndex = 18;
 			this.button3Name2nd.Text = "Кнопка +3";
 			this.button3Name2nd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// button1Name2nd
-			// 
 			this.button1Name2nd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.button1Name2nd.Location = new System.Drawing.Point(196, 27);
@@ -861,9 +765,6 @@
 			this.button1Name2nd.TabIndex = 17;
 			this.button1Name2nd.Text = "Кнопка +1";
 			this.button1Name2nd.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// secondPlayerThreeValue
-			// 
 			this.secondPlayerThreeValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.secondPlayerThreeValue.Location = new System.Drawing.Point(68, 98);
@@ -874,9 +775,6 @@
 			this.secondPlayerThreeValue.Text = "+3 балла";
 			this.secondPlayerThreeValue.UseVisualStyleBackColor = true;
 			this.secondPlayerThreeValue.Click += new System.EventHandler(this.secondPlayerThreeValue_Click);
-			// 
-			// secondPlayerTwoValue
-			// 
 			this.secondPlayerTwoValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.secondPlayerTwoValue.Location = new System.Drawing.Point(68, 61);
@@ -887,9 +785,6 @@
 			this.secondPlayerTwoValue.Text = "+2 балла";
 			this.secondPlayerTwoValue.UseVisualStyleBackColor = true;
 			this.secondPlayerTwoValue.Click += new System.EventHandler(this.secondPlayerTwoValue_Click);
-			// 
-			// secondPlayerOneValue
-			// 
 			this.secondPlayerOneValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.secondPlayerOneValue.Location = new System.Drawing.Point(68, 27);
@@ -900,10 +795,11 @@
 			this.secondPlayerOneValue.Text = "+1 балл";
 			this.secondPlayerOneValue.UseVisualStyleBackColor = true;
 			this.secondPlayerOneValue.Click += new System.EventHandler(this.secondPlayerOneValue_Click);
-			// 
-			// groupBox1
-			// 
 			this.groupBox1.BackColor = System.Drawing.Color.LightCoral;
+			this.groupBox1.Controls.Add(this.set4Sound1st);
+			this.groupBox1.Controls.Add(this.button4Name1st);
+			this.groupBox1.Controls.Add(this.player1Scores4);
+			this.groupBox1.Controls.Add(this.firstPlayerFourthValue);
 			this.groupBox1.Controls.Add(this.player1Scores3);
 			this.groupBox1.Controls.Add(this.player1Scores2);
 			this.groupBox1.Controls.Add(this.player1Scores1);
@@ -918,17 +814,54 @@
 			this.groupBox1.Controls.Add(this.firstPlayerOneValue);
 			this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
 				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
-			this.groupBox1.Location = new System.Drawing.Point(10, 105);
+			this.groupBox1.Location = new System.Drawing.Point(10, 111);
 			this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.groupBox1.Size = new System.Drawing.Size(528, 137);
+			this.groupBox1.Size = new System.Drawing.Size(528, 174);
 			this.groupBox1.TabIndex = 34;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Первый участник";
-			// 
-			// player1Scores3
-			// 
+			this.set4Sound1st.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
+				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+			this.set4Sound1st.Location = new System.Drawing.Point(406, 127);
+			this.set4Sound1st.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.set4Sound1st.Name = "set4Sound1st";
+			this.set4Sound1st.Size = new System.Drawing.Size(103, 27);
+			this.set4Sound1st.TabIndex = 53;
+			this.set4Sound1st.Text = "Звук <+4>";
+			this.set4Sound1st.UseVisualStyleBackColor = true;
+			this.set4Sound1st.Click += new System.EventHandler(this.set4Sound1st_Click);
+			this.button4Name1st.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
+				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+			this.button4Name1st.Location = new System.Drawing.Point(196, 129);
+			this.button4Name1st.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.button4Name1st.Name = "button4Name1st";
+			this.button4Name1st.Size = new System.Drawing.Size(202, 29);
+			this.button4Name1st.TabIndex = 52;
+			this.button4Name1st.Text = "Кнопка +3";
+			this.button4Name1st.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.player1Scores4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
+				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+			this.player1Scores4.Location = new System.Drawing.Point(8, 130);
+			this.player1Scores4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.player1Scores4.Maximum = new decimal(new int[] {200, 0, 0, 0});
+			this.player1Scores4.Minimum = new decimal(new int[] {1, 0, 0, 0});
+			this.player1Scores4.Name = "player1Scores4";
+			this.player1Scores4.Size = new System.Drawing.Size(52, 29);
+			this.player1Scores4.TabIndex = 51;
+			this.player1Scores4.Value = new decimal(new int[] {1, 0, 0, 0});
+			this.player1Scores4.ValueChanged += new System.EventHandler(this.player1Scores4_ValueChanged);
+			this.firstPlayerFourthValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
+				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
+			this.firstPlayerFourthValue.Location = new System.Drawing.Point(68, 130);
+			this.firstPlayerFourthValue.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+			this.firstPlayerFourthValue.Name = "firstPlayerFourthValue";
+			this.firstPlayerFourthValue.Size = new System.Drawing.Size(120, 27);
+			this.firstPlayerFourthValue.TabIndex = 50;
+			this.firstPlayerFourthValue.Text = "+4 балла";
+			this.firstPlayerFourthValue.UseVisualStyleBackColor = true;
+			this.firstPlayerFourthValue.Click += new System.EventHandler(this.firstPlayerForthValue_Click);
 			this.player1Scores3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.player1Scores3.Location = new System.Drawing.Point(8, 96);
@@ -940,9 +873,6 @@
 			this.player1Scores3.TabIndex = 49;
 			this.player1Scores3.Value = new decimal(new int[] {1, 0, 0, 0});
 			this.player1Scores3.ValueChanged += new System.EventHandler(this.player1Scores3_ValueChanged);
-			// 
-			// player1Scores2
-			// 
 			this.player1Scores2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.player1Scores2.Location = new System.Drawing.Point(8, 62);
@@ -954,9 +884,6 @@
 			this.player1Scores2.TabIndex = 48;
 			this.player1Scores2.Value = new decimal(new int[] {1, 0, 0, 0});
 			this.player1Scores2.ValueChanged += new System.EventHandler(this.player1Scores2_ValueChanged);
-			// 
-			// player1Scores1
-			// 
 			this.player1Scores1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.player1Scores1.Location = new System.Drawing.Point(8, 30);
@@ -968,12 +895,9 @@
 			this.player1Scores1.TabIndex = 47;
 			this.player1Scores1.Value = new decimal(new int[] {1, 0, 0, 0});
 			this.player1Scores1.ValueChanged += new System.EventHandler(this.player1Scores1_ValueChanged);
-			// 
-			// set3Sound1st
-			// 
 			this.set3Sound1st.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
-			this.set3Sound1st.Location = new System.Drawing.Point(406, 99);
+			this.set3Sound1st.Location = new System.Drawing.Point(406, 93);
 			this.set3Sound1st.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.set3Sound1st.Name = "set3Sound1st";
 			this.set3Sound1st.Size = new System.Drawing.Size(103, 27);
@@ -981,9 +905,6 @@
 			this.set3Sound1st.Text = "Звук <+3>";
 			this.set3Sound1st.UseVisualStyleBackColor = true;
 			this.set3Sound1st.Click += new System.EventHandler(this.set3Sound1st_Click);
-			// 
-			// set2Sound1st
-			// 
 			this.set2Sound1st.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.set2Sound1st.Location = new System.Drawing.Point(406, 61);
@@ -994,9 +915,6 @@
 			this.set2Sound1st.Text = "Звук <+2>";
 			this.set2Sound1st.UseVisualStyleBackColor = true;
 			this.set2Sound1st.Click += new System.EventHandler(this.set2Sound1st_Click);
-			// 
-			// set1Sound1st
-			// 
 			this.set1Sound1st.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.set1Sound1st.Location = new System.Drawing.Point(406, 29);
@@ -1007,9 +925,6 @@
 			this.set1Sound1st.Text = "Звук <+1>";
 			this.set1Sound1st.UseVisualStyleBackColor = true;
 			this.set1Sound1st.Click += new System.EventHandler(this.set1Sound1st_Click);
-			// 
-			// button2Name1st
-			// 
 			this.button2Name1st.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.button2Name1st.Location = new System.Drawing.Point(196, 60);
@@ -1019,9 +934,6 @@
 			this.button2Name1st.TabIndex = 13;
 			this.button2Name1st.Text = "Кнопка +2";
 			this.button2Name1st.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// button3Name1st
-			// 
 			this.button3Name1st.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.button3Name1st.Location = new System.Drawing.Point(196, 95);
@@ -1031,9 +943,6 @@
 			this.button3Name1st.TabIndex = 12;
 			this.button3Name1st.Text = "Кнопка +3";
 			this.button3Name1st.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// button1Name1st
-			// 
 			this.button1Name1st.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.button1Name1st.Location = new System.Drawing.Point(196, 28);
@@ -1043,9 +952,6 @@
 			this.button1Name1st.TabIndex = 11;
 			this.button1Name1st.Text = "Кнопка +1";
 			this.button1Name1st.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// firstPlayerThreeValue
-			// 
 			this.firstPlayerThreeValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.firstPlayerThreeValue.Location = new System.Drawing.Point(68, 97);
@@ -1056,9 +962,6 @@
 			this.firstPlayerThreeValue.Text = "+3 балла";
 			this.firstPlayerThreeValue.UseVisualStyleBackColor = true;
 			this.firstPlayerThreeValue.Click += new System.EventHandler(this.firstPlayerThreeValue_Click);
-			// 
-			// firstPlayerTwoValue
-			// 
 			this.firstPlayerTwoValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.firstPlayerTwoValue.Location = new System.Drawing.Point(68, 63);
@@ -1069,9 +972,6 @@
 			this.firstPlayerTwoValue.Text = "+2 балла";
 			this.firstPlayerTwoValue.UseVisualStyleBackColor = true;
 			this.firstPlayerTwoValue.Click += new System.EventHandler(this.firstPlayerTwoValue_Click);
-			// 
-			// firstPlayerOneValue
-			// 
 			this.firstPlayerOneValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.firstPlayerOneValue.Location = new System.Drawing.Point(68, 32);
@@ -1082,9 +982,6 @@
 			this.firstPlayerOneValue.Text = "+1 балл";
 			this.firstPlayerOneValue.UseVisualStyleBackColor = true;
 			this.firstPlayerOneValue.Click += new System.EventHandler(this.firstPlayerOneValue_Click);
-			// 
-			// label1
-			// 
 			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
 				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.label1.Location = new System.Drawing.Point(481, 2);
@@ -1094,20 +991,6 @@
 			this.label1.TabIndex = 33;
 			this.label1.Text = "Установка таймера";
 			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// notifyText
-			// 
-			this.notifyText.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F,
-				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
-			this.notifyText.Location = new System.Drawing.Point(0, 515);
-			this.notifyText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.notifyText.Name = "notifyText";
-			this.notifyText.Size = new System.Drawing.Size(1190, 28);
-			this.notifyText.TabIndex = 10;
-			this.notifyText.Text = "Уведомление";
-			// 
-			// SetTimer
-			// 
 			this.SetTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold,
 				System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.SetTimer.Location = new System.Drawing.Point(492, 72);
@@ -1118,9 +1001,6 @@
 			this.SetTimer.Text = "Установить таймер";
 			this.SetTimer.UseVisualStyleBackColor = true;
 			this.SetTimer.Click += new System.EventHandler(this.SetTimer_Click);
-			// 
-			// secondsPartTimer
-			// 
 			this.secondsPartTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.secondsPartTimer.Location = new System.Drawing.Point(586, 31);
@@ -1129,9 +1009,6 @@
 			this.secondsPartTimer.Name = "secondsPartTimer";
 			this.secondsPartTimer.Size = new System.Drawing.Size(52, 29);
 			this.secondsPartTimer.TabIndex = 4;
-			// 
-			// minutesPartTimer
-			// 
 			this.minutesPartTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F,
 				System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte) (204)));
 			this.minutesPartTimer.Location = new System.Drawing.Point(516, 31);
@@ -1140,21 +1017,15 @@
 			this.minutesPartTimer.Name = "minutesPartTimer";
 			this.minutesPartTimer.Size = new System.Drawing.Size(55, 29);
 			this.minutesPartTimer.TabIndex = 3;
-			// 
-			// loggerPage
-			// 
 			this.loggerPage.Controls.Add(this.loggerTextbox);
 			this.loggerPage.Location = new System.Drawing.Point(4, 22);
 			this.loggerPage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.loggerPage.Name = "loggerPage";
 			this.loggerPage.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-			this.loggerPage.Size = new System.Drawing.Size(1195, 550);
+			this.loggerPage.Size = new System.Drawing.Size(1402, 566);
 			this.loggerPage.TabIndex = 2;
 			this.loggerPage.Text = "Лог";
 			this.loggerPage.UseVisualStyleBackColor = true;
-			// 
-			// loggerTextbox
-			// 
 			this.loggerTextbox.Location = new System.Drawing.Point(1, 3);
 			this.loggerTextbox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.loggerTextbox.MaxLength = 512767;
@@ -1163,17 +1034,11 @@
 			this.loggerTextbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
 			this.loggerTextbox.Size = new System.Drawing.Size(1190, 421);
 			this.loggerTextbox.TabIndex = 0;
-			// 
-			// openFileDialog
-			// 
 			this.openFileDialog.FileName = "openFileDialog";
 			this.openFileDialog.Filter = "Mp3|*.mp3|Wav|*.wav";
-			// 
-			// ScoresForm
-			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1199, 573);
+			this.ClientSize = new System.Drawing.Size(1408, 573);
 			this.Controls.Add(this.JudgesDashboard);
 			this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
 			this.Name = "ScoresForm";
@@ -1195,10 +1060,12 @@
 			((System.ComponentModel.ISupportInitialize) (this.pauseSeconds)).EndInit();
 			((System.ComponentModel.ISupportInitialize) (this.pauseMinutes)).EndInit();
 			this.groupBox2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize) (this.player2Scores4)).EndInit();
 			((System.ComponentModel.ISupportInitialize) (this.player2Scores3)).EndInit();
 			((System.ComponentModel.ISupportInitialize) (this.player2Scores2)).EndInit();
 			((System.ComponentModel.ISupportInitialize) (this.player2Scores1)).EndInit();
 			this.groupBox1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize) (this.player1Scores4)).EndInit();
 			((System.ComponentModel.ISupportInitialize) (this.player1Scores3)).EndInit();
 			((System.ComponentModel.ISupportInitialize) (this.player1Scores2)).EndInit();
 			((System.ComponentModel.ISupportInitialize) (this.player1Scores1)).EndInit();
@@ -1288,6 +1155,14 @@
 		private System.Windows.Forms.Label undoActionButton;
 		private System.Windows.Forms.Button undoAction;
 		private System.Windows.Forms.Label roundNumber;
+		private System.Windows.Forms.Button set4Sound2nd;
+		private System.Windows.Forms.Label button4Name2nd;
+		private System.Windows.Forms.NumericUpDown player2Scores4;
+		private System.Windows.Forms.Button secondPlayerFourthValue;
+		private System.Windows.Forms.Button set4Sound1st;
+		private System.Windows.Forms.Label button4Name1st;
+		private System.Windows.Forms.NumericUpDown player1Scores4;
+		private System.Windows.Forms.Button firstPlayerFourthValue;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
 	}
 }

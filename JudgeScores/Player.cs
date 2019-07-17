@@ -8,7 +8,8 @@ namespace JudgeScores
 	{
 		First = 1,
 		Second = 2,
-		Third = 3
+		Third = 3,
+		Fourth = 4
 	}
 
 	public class Player
@@ -22,6 +23,7 @@ namespace JudgeScores
 			{ ScoresRange.First, 1 },
 			{ ScoresRange.Second, 2 },
 			{ ScoresRange.Third, 3 },
+			{ ScoresRange.Fourth, 4 },
 		};
 		
 		private Action<ushort> _setHitAction;

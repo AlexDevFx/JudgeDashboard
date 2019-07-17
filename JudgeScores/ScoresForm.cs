@@ -234,6 +234,8 @@ namespace JudgeScores
 				MainActionTypes.UndoAction,
 				() =>
 				{
+					if (IsRoundCompleted)
+						return;
 					if(_lastAction?.Player != null && _lastAction?.HitsAmount > 0)
 						_lastAction.Player.SubstrateHits(_lastAction.HitsAmount);
 					
@@ -254,6 +256,11 @@ namespace JudgeScores
 			{
 					_firstPlayer.SetHit(ScoresRange.Third);
 			});
+			
+			_firstPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit4Level, () =>
+			{
+				_firstPlayer.SetHit(ScoresRange.Fourth);
+			});
 
 			_secondPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit1Level, () =>
 			{
@@ -268,6 +275,11 @@ namespace JudgeScores
 			_secondPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit3Level, () =>
 			{
 					_secondPlayer.SetHit(ScoresRange.Third);
+			});
+			
+			_secondPlayerActionsProcessor.AddAction(MainActionTypes.PlayerHit4Level, () =>
+			{
+				_secondPlayer.SetHit(ScoresRange.Fourth);
 			});
 		}
 
@@ -929,11 +941,11 @@ namespace JudgeScores
 
 		private void ResizeLabels()
 		{
-			float fontScale = 1.0f;
+			float fontScale = 0.85f;
 
 			if (WindowState == FormWindowState.Maximized)
 			{
-				fontScale = 0.8f;
+				fontScale = 0.65f;
 			}
 
 			JudgesDashboard.Height = Height - 38;
@@ -949,7 +961,7 @@ namespace JudgeScores
 
 			secondPlayerScores.Location = new Point(firstPlayerScores.Width + firstPlayerScores.Location.X, secondPlayerScores.Location.Y);
 
-			float fontSize = Math.Max(firstPlayerScores.Width * firstPlayerScores.Height / ((514 * 362) / 150F)*fontScale, 14F);
+			float fontSize = Math.Max(firstPlayerScores.Width * firstPlayerScores.Height / ((514 * 362) / 150F)*fontScale, 12F);
 
 			firstPlayerScores.Font = new Font("Microsoft Sans Serif", fontSize, FontStyle.Bold,GraphicsUnit.Point, ((byte)(204)));
 			secondPlayerScores.Font = new Font("Microsoft Sans Serif", fontSize, FontStyle.Bold, GraphicsUnit.Point, ((byte)(204)));
@@ -1113,6 +1125,15 @@ namespace JudgeScores
 								MessageFuncStr = (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +3 балла для первого участника",
 								MessageFuncChar = (arg) => $"Кнопка <{arg}> назначена +3 балла для первого участника",
 							}
+						},
+						{
+							MainActionTypes.PlayerHit4Level,
+							new ScoresBinds
+							{
+								Label = button4Name1st,
+								MessageFuncStr = (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +4 балла для первого участника",
+								MessageFuncChar = (arg) => $"Кнопка <{arg}> назначена +4 балла для первого участника",
+							}
 						}
 					};
 
@@ -1144,6 +1165,15 @@ namespace JudgeScores
 								MessageFuncStr = (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +3 балла для второго участника",
 								MessageFuncChar = (arg) => $"Кнопка <{arg}> назначена +3 балла для второго участника",
 							}
+						},
+						{
+							MainActionTypes.PlayerHit4Level,
+							new ScoresBinds
+							{
+								Label = button4Name2nd,
+								MessageFuncStr = (arg) => $"Кнопка <{GetButtonName(arg)}> назначена +4 балла для второго участника",
+								MessageFuncChar = (arg) => $"Кнопка <{arg}> назначена +4 балла для второго участника",
+							}
 						}
 					};
 
@@ -1156,50 +1186,58 @@ namespace JudgeScores
 						{
 							{ ScoresRange.First, firstPlayerOneValue },
 							{ ScoresRange.Second, firstPlayerTwoValue },
-							{ ScoresRange.Third, firstPlayerThreeValue }
+							{ ScoresRange.Third, firstPlayerThreeValue },
+							{ ScoresRange.Fourth, firstPlayerFourthValue }
 						}, 
 						new Dictionary<ScoresRange, Label>
 						{
 							{ ScoresRange.First, button1Name1st },
 							{ ScoresRange.Second, button2Name1st },
-							{ ScoresRange.Third, button3Name1st }
+							{ ScoresRange.Third, button3Name1st },
+							{ ScoresRange.Fourth, button4Name1st }
 						},
 						new Dictionary<ScoresRange, Button>
 						{
 							{ ScoresRange.First, set1Sound1st },
 							{ ScoresRange.Second, set2Sound1st },
-							{ ScoresRange.Third, set3Sound1st }
+							{ ScoresRange.Third, set3Sound1st },
+							{ ScoresRange.Fourth, set4Sound1st }
 						},
 						new Dictionary<ScoresRange, NumericUpDown>
 						{
 							{ ScoresRange.First, player1Scores1 },
 							{ ScoresRange.Second, player1Scores2 },
-							{ ScoresRange.Third, player1Scores3 }
+							{ ScoresRange.Third, player1Scores3 },
+							{ ScoresRange.Fourth, player1Scores4 }
 						});
 					
 					AssignPlayerHitsMap(settings.SecondPlayerHitsBinds, _secondPlayer,new Dictionary<ScoresRange, Button>()
 						{
 							{ ScoresRange.First, secondPlayerOneValue },
 							{ ScoresRange.Second, secondPlayerTwoValue },
-							{ ScoresRange.Third, secondPlayerThreeValue }
+							{ ScoresRange.Third, secondPlayerThreeValue },
+							{ ScoresRange.Fourth, secondPlayerFourthValue }
 						}, 
 						new Dictionary<ScoresRange, Label>
 						{
 							{ ScoresRange.First, button1Name2nd },
 							{ ScoresRange.Second, button2Name2nd },
-							{ ScoresRange.Third, button3Name2nd }
+							{ ScoresRange.Third, button3Name2nd },
+							{ ScoresRange.Fourth, button4Name2nd }
 						},
 						new Dictionary<ScoresRange, Button>
 						{
 							{ ScoresRange.First, set1Sound2nd },
 							{ ScoresRange.Second, set2Sound2nd },
-							{ ScoresRange.Third, set3Sound2nd }
+							{ ScoresRange.Third, set3Sound2nd },
+							{ ScoresRange.Fourth, set4Sound2nd }
 						},
 						new Dictionary<ScoresRange, NumericUpDown>
 						{
 							{ ScoresRange.First, player2Scores1 },
 							{ ScoresRange.Second, player2Scores2 },
-							{ ScoresRange.Third, player2Scores3 }
+							{ ScoresRange.Third, player2Scores3 },
+							{ ScoresRange.Fourth, player2Scores4 }
 						});
 				}
 			}
@@ -1481,6 +1519,40 @@ namespace JudgeScores
 						}
 					);
 				}, new[]{ InputButtonSource.Any });
+		}
+
+		private void firstPlayerForthValue_Click(object sender, EventArgs e)
+		{
+			AddButtonAssignmentPlayer(new[] { InputButtonSource.First, InputButtonSource.Keyboard }, _firstPlayerActionsProcessor, MainActionTypes.PlayerHit4Level, button4Name1st,
+				(arg) => $"Кнопка <{GetButtonName(arg)}> назначена +4 балла для первого участника", (arg) => $"Кнопка <{arg}> назначена +4 балла для первого участника");
+		}
+
+		private void player1Scores4_ValueChanged(object sender, EventArgs e)
+		{
+			SetHitsAmount(_firstPlayer, ScoresRange.Fourth, (ushort) player1Scores4.Value, firstPlayerFourthValue,
+				set4Sound1st);
+		}
+
+		private void set4Sound1st_Click(object sender, EventArgs e)
+		{
+			AddSoundForPlayer(_firstPlayer, ScoresRange.Fourth);
+		}
+
+		private void player2Scores4_ValueChanged(object sender, EventArgs e)
+		{
+			SetHitsAmount(_secondPlayer, ScoresRange.Fourth, (ushort) player2Scores4.Value, secondPlayerFourthValue,
+				set4Sound2nd);
+		}
+
+		private void set4Sound2nd_Click(object sender, EventArgs e)
+		{
+			AddSoundForPlayer(_secondPlayer, ScoresRange.Fourth);
+		}
+
+		private void secondPlayerFourthValue_MouseClick(object sender, MouseEventArgs e)
+		{
+			AddButtonAssignmentPlayer(new[] { InputButtonSource.First, InputButtonSource.Keyboard }, _secondPlayerActionsProcessor, MainActionTypes.PlayerHit4Level, button4Name2nd,
+				(arg) => $"Кнопка <{GetButtonName(arg)}> назначена +4 балла для первого участника", (arg) => $"Кнопка <{arg}> назначена +4 балла для первого участника");
 		}
 	}
 }
