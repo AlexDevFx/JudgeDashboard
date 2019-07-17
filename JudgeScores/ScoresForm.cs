@@ -84,7 +84,7 @@ namespace JudgeScores
 		
 		private readonly IKeyboardMouseEvents _globalHook;
 
-		private ActionHistory _lastAction = new ActionHistory();
+		private Stack<ActionHistory> _lastActions = new  Stack<ActionHistory>();
 
 		public ScoresForm()
 		{
@@ -125,16 +125,13 @@ namespace JudgeScores
 			{
 				firstPlayerScores.Text = _firstPlayer.Scores.ToString("D");
 
-				if (hitsAmount > 0)
+				if (hitsAmount > 0 && hitsAmount != ushort.MaxValue)
 				{
-					_lastAction.Player = _firstPlayer;
-					_lastAction.HitsAmount = hitsAmount;
-				}
-				
-				if (hitsAmount == ushort.MaxValue)
-				{
-					_lastAction.Player = null;
-					_lastAction.HitsAmount = 0;
+					_lastActions.Push(new ActionHistory
+					{
+						Player = _firstPlayer,
+						HitsAmount = hitsAmount
+					});
 				}
 			}, 
 			PlaySound);
@@ -143,16 +140,13 @@ namespace JudgeScores
 			{
 				secondPlayerScores.Text = _secondPlayer.Scores.ToString("D");
 				
-				if (hitsAmount > 0)
+				if (hitsAmount > 0 && hitsAmount != ushort.MaxValue)
 				{
-					_lastAction.Player = _secondPlayer;
-					_lastAction.HitsAmount = hitsAmount;
-				}
-				
-				if (hitsAmount == ushort.MaxValue)
-				{
-					_lastAction.Player = null;
-					_lastAction.HitsAmount = 0;
+					_lastActions.Push(new ActionHistory
+					{
+						Player = _secondPlayer,
+						HitsAmount = hitsAmount
+					});
 				}
 			},
 			PlaySound);
@@ -234,10 +228,13 @@ namespace JudgeScores
 				MainActionTypes.UndoAction,
 				() =>
 				{
-					if (IsRoundCompleted)
+					if(_lastActions.Count < 1)
 						return;
-					if(_lastAction?.Player != null && _lastAction?.HitsAmount > 0)
-						_lastAction.Player.SubstrateHits(_lastAction.HitsAmount);
+
+					ActionHistory lastAction = _lastActions.Pop();
+					
+					if(lastAction?.Player != null && lastAction?.HitsAmount > 0)
+						lastAction.Player.SubstrateHits(lastAction.HitsAmount);
 					
 					PlaySoundForAction(MainActionTypes.UndoAction);
 				});
