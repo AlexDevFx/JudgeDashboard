@@ -293,8 +293,7 @@ namespace JudgeScores
 				return;
 			
 			_countdownTime = _countdownTime.Subtract(TimeSpan.FromSeconds(1));
-
-
+			
 			if (Math.Abs(_countdownTime.TotalSeconds - 10) < 1)
 			{
 				PlaySoundForAction(MainActionTypes.RoundRemain10Seconds);
@@ -309,7 +308,7 @@ namespace JudgeScores
 				StopRound();
 				PlaySoundForAction(MainActionTypes.RoundComplete);
 				_dashboardSettings.RoundsCompleted++;
-			
+				
 				if ( _dashboardSettings.RoundsCount - _dashboardSettings.RoundsCompleted > 0 )
 				{
 					_pauseCountdownTime = TimeSpan.FromSeconds(_dashboardSettings.PauseSeconds);
@@ -354,8 +353,10 @@ namespace JudgeScores
 
 		private void StartRound()
 		{
+			roundNumber.Text = $"Раунд {_dashboardSettings.RoundsCompleted + 1}";
+			
 			_mainRoundTimer.Start();
-
+			
 			if (_dashboardSettings?.RandomTimer1?.IsEnabled == true)
 			{
 				RestartExtraTimer(_extraTimer1, _dashboardSettings.RandomTimer1.LowerLimit, _dashboardSettings.RandomTimer1.UpperLimit);
@@ -756,9 +757,12 @@ namespace JudgeScores
 
 			firstPlayerScores.Font = new Font("Microsoft Sans Serif", fontSize, FontStyle.Bold,GraphicsUnit.Point, ((byte)(204)));
 			secondPlayerScores.Font = new Font("Microsoft Sans Serif", fontSize, FontStyle.Bold, GraphicsUnit.Point, ((byte)(204)));
-			countdownTimer.Font = new Font("Microsoft Sans Serif", fontSize * 0.3F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(204)));
+			countdownTimer.Font = new Font("Microsoft Sans Serif", fontSize * 0.25F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(204)));
 
 			countdownTimer.Location = new Point(firstPlayerScores.Width + firstPlayerScores.Location.X - countdownTimer.Width / 2, countdownTimer.Location.Y);
+			
+			roundNumber.Font = new Font("Microsoft Sans Serif", fontSize * 0.12F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(204)));
+			roundNumber.Location = new Point(firstPlayerScores.Width + firstPlayerScores.Location.X - roundNumber.Width / 2, countdownTimer.Location.Y + countdownTimer.Height);
 		}
 
 		private void setRoundRemainSound_Click(object sender, EventArgs e)
