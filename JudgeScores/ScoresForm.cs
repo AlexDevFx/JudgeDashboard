@@ -220,6 +220,9 @@ namespace JudgeScores
 					_firstPlayer.ResetScores();
 					_secondPlayer.ResetScores();
 					_dashboardSettings.RoundsCompleted = 0;
+					
+					_lastActions.Clear();
+					
 					PlaySoundForAction(MainActionTypes.ResetTimer);
 				});
 			
