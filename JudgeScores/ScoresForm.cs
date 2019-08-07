@@ -140,6 +140,11 @@ namespace JudgeScores
 		{
 			_commonActionsProcessor.AddAction(MainActionTypes.StartTimer, () =>
 			{
+				if (_pauseRoundTimer.Enabled)
+				{
+					return;
+				}
+				
 				if (IsRoundCompleted)
 				{
 					StartRound();
@@ -154,6 +159,11 @@ namespace JudgeScores
 
 			_commonActionsProcessor.AddAction(MainActionTypes.StopTimer, () =>
 			{
+				if (_pauseRoundTimer.Enabled)
+				{
+					return;
+				}
+				
 				if (IsRoundCompleted)
 				{
 					StartRound();
